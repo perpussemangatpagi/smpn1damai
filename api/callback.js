@@ -15,41 +15,44 @@ export default async function handler(req, res) {
     
     const data = await response.json();
     
-    // SKENARIO 1: SUKSES MENDAPATKAN TOKEN
     if (data.access_token) {
+      // SKENARIO SUKSES: Lakukan Handshake dengan Sveltia CMS
       const script = `
         <!DOCTYPE html>
         <html>
         <body style="font-family: sans-serif; text-align: center; margin-top: 50px;">
           <h2>Login Berhasil! 🚀</h2>
-          <p>Menghubungkan ke sistem CMS sekolah...</p>
+          <p>Sedang mengirim kunci ke CMS (Jangan tutup jendela ini)...</p>
           <script>
-            const message = { token: '${data.access_token}', provider: 'github' };
-            // Kirim token kembali ke Sveltia
-            window.opener.postMessage('authorization:github:success:' + JSON.stringify(message), '*');
-            
-            // Beri jeda 1.5 detik agar CMS sempat menangkap sinyal sebelum window ditutup
-            setTimeout(() => {
-              window.close();
-            }, 1500);
+            (function() {
+              function receiveMessage(e) {
+                // 3. Ketika CMS menjawab "Saya siap", lemparkan tokennya!
+                if (e.data === "authorizing:github") {
+                  window.opener.postMessage(
+                    'authorization:github:success:{"token":"${data.access_token}","provider":"github"}',
+                    e.origin
+                  );
+                  // Hapus pendengar pesan, biarkan Sveltia yang menutup jendela ini
+                  window.removeEventListener("message", receiveMessage);
+                }
+              }
+              
+              // 1. Pasang telinga untuk menunggu balasan dari CMS utama
+              window.addEventListener("message", receiveMessage, false);
+              
+              // 2. Teriak ke CMS utama: "Halo, saya sudah siap bawa token nih!"
+              window.opener.postMessage("authorizing:github", "*");
+            })();
           </script>
         </body>
         </html>
       `;
       res.setHeader('Content-Type', 'text/html');
       res.status(200).send(script);
-    } 
-    // SKENARIO 2: GAGAL DARI GITHUB
-    else {
+    } else {
+      // SKENARIO GAGAL
       res.setHeader('Content-Type', 'text/html');
-      res.status(200).send(`
-        <div style="font-family: sans-serif; padding: 20px;">
-          <h2 style="color: red;">⚠️ Gagal Mendapatkan Token</h2>
-          <p>Ini balasan dari server GitHub:</p>
-          <pre style="background: #f4f4f4; padding: 15px; border-radius: 5px;">${JSON.stringify(data, null, 2)}</pre>
-          <p><b>Solusi:</b> Kemungkinan besar kode <code>GITHUB_CLIENT_SECRET</code> di Vercel kurang tepat. Coba buat (generate) Client Secret baru di GitHub, lalu paste ulang di Vercel tanpa ada spasi lebih.</p>
-        </div>
-      `);
+      res.status(200).send('<h2 style="color:red;">Gagal Mendapatkan Token</h2><pre>' + JSON.stringify(data, null, 2) + '</pre>');
     }
   } catch (error) {
     res.status(500).send('Terjadi kesalahan pada koneksi server API.');
