@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CMS SMPN 1 Damai</title>
     <style>
-        /* TEMA MESH GRADIENT */
         * { box-sizing: border-box; }
         :root {
             --primary: #0ea5e9; 
@@ -115,6 +114,7 @@
             <input type="hidden" id="edit-sha" value="">
             <input type="hidden" id="edit-path" value="">
             <input type="hidden" id="old-image-path" value="">
+            <input type="hidden" id="delete-image-path" value="">
             
             <label>Penulis</label>
             <input type="text" id="author" readonly>
@@ -176,9 +176,7 @@
                 } else { 
                     alert(data.error); 
                 }
-            } catch (err) {
-                alert("Gagal menyambung ke server login.");
-            }
+            } catch (err) { alert("Gagal menyambung ke server login."); }
             btn.disabled = false; msg.style.display = 'none';
         }
 
@@ -191,14 +189,21 @@
             document.getElementById('edit-sha').value = ''; 
             document.getElementById('edit-path').value = ''; 
             document.getElementById('old-image-path').value = '';
+            document.getElementById('delete-image-path').value = '';
+            document.getElementById('old-image-path').dataset.original = '';
             document.getElementById('old-image-container').style.display = 'none';
             document.getElementById('btnPublish').innerText = '🚀 Terbitkan Berita Baru'; 
         }
 
         function hapusFotoLama() {
+            const oldPath = document.getElementById('old-image-path').value;
+            if (oldPath) {
+                // Masukkan ke tong sampah
+                document.getElementById('delete-image-path').value = oldPath;
+            }
             document.getElementById('old-image-path').value = ''; 
             document.getElementById('old-image-container').style.display = 'none'; 
-            alert("Foto lama siap dihapus saat berita disimpan.");
+            alert("Foto lama siap disapu bersih dari GitHub saat berita disimpan.");
         }
 
         async function loadList() {
@@ -225,13 +230,13 @@
         }
 
         async function deleteFile(path, sha) {
-            if(!confirm('Yakin ingin menghapus berita ini secara permanen?')) return;
+            if(!confirm('Yakin ingin menghapus berita beserta fotonya secara permanen?')) return;
             try {
                 await fetch('/api/delete', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: sessionStorage.getItem('cms_user'), password: sessionStorage.getItem('cms_pass'), path: path, sha: sha })
                 });
-                alert('Berita sukses dihapus!'); loadList();
+                alert('Berita dan Foto (jika ada) sukses disapu bersih!'); loadList();
             } catch(e) { alert('Gagal menghapus'); }
         }
 
@@ -257,10 +262,14 @@
                 document.getElementById('btnPublish').innerText = '💾 Simpan Perubahan Berita';
                 
                 const oldPathInput = document.getElementById('old-image-path');
+                const delPathInput = document.getElementById('delete-image-path');
                 const oldImgContainer = document.getElementById('old-image-container');
                 const oldImgName = document.getElementById('old-image-name');
                 
                 oldPathInput.value = oldImage;
+                oldPathInput.dataset.original = oldImage; // Simpan memori foto asli
+                delPathInput.value = ''; // Pastikan tong sampah bersih
+                
                 if (oldImage) {
                     oldImgContainer.style.display = 'flex';
                     oldImgName.innerText = '🖼️ Foto tersimpan: ' + oldImage.split('/').pop();
@@ -273,7 +282,6 @@
             } catch(e) { alert('Gagal memuat detail berita'); loadList(); }
         }
 
-        // FUNGSI KOMPRESOR FOTO
         function compressImage(file, maxWidth = 1200, quality = 0.7) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -303,14 +311,16 @@
             });
         }
 
-        // FUNGSI PUBLISH DENGAN KOMPRESOR
         async function publish() {
             const title = document.getElementById('title').value;
             const body = document.getElementById('body').value;
             const imgFile = document.getElementById('image').files[0];
             const editSha = document.getElementById('edit-sha').value;
             const editPath = document.getElementById('edit-path').value;
+            
             const oldImage = document.getElementById('old-image-path').value;
+            let imageToDelete = document.getElementById('delete-image-path').value;
+            const originalImage = document.getElementById('old-image-path').dataset.original;
             
             const msg = document.getElementById('publish-msg');
             const btn = document.getElementById('btnPublish');
@@ -323,19 +333,23 @@
             let imageBase64 = null, imageName = null;
             
             if (imgFile) {
-                msg.innerText = "Mengompres ukuran foto di HP Anda...";
+                msg.innerText = "Mengompres ukuran foto...";
                 imageBase64 = await compressImage(imgFile, 1200, 0.7);
                 const originalName = imgFile.name.split('.')[0];
                 imageName = originalName + '.jpg';
+                
+                // Kalau upload foto baru, dan dulu ada foto asli, masukin ke tong sampah!
+                if (originalImage) imageToDelete = originalImage;
             }
 
-            msg.innerText = "Mengirim data ke server GitHub...";
+            msg.innerText = "Menerbitkan dan membersihkan server...";
 
             const payload = { 
                 username: sessionStorage.getItem('cms_user'), 
                 password: sessionStorage.getItem('cms_pass'), 
                 title, body, imageBase64, imageName, 
-                updateSha: editSha, updatePath: editPath, oldImage: oldImage 
+                updateSha: editSha, updatePath: editPath, 
+                oldImage: oldImage, imageToDelete: imageToDelete
             };
             
             try {
@@ -347,7 +361,7 @@
                 const data = await res.json();
                 
                 if (data.success) { 
-                    alert("✅ Eksekusi Berhasil! Berita sudah terbit."); 
+                    alert("✅ Eksekusi Berhasil! Web dan Server kini bersih."); 
                     resetForm(); 
                     switchTab('daftar'); 
                 } else { 
