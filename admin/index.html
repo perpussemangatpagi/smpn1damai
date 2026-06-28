@@ -5,99 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CMS SMPN 1 Damai</title>
     <style>
-        /* TEMA PASTEL & GLASSMORPHISM SESUAI GAMBAR */
+        /* TEMA MESH GRADIENT SESUAI INDEX(4).HTML */
+        * { box-sizing: border-box; }
         :root {
-            --primary: #10b981; /* Hijau Tombol */
+            --primary: #0ea5e9; /* Biru terang khas Perpus */
+            --primary-hover: #0284c7;
             --danger: #ef4444;
             --text-main: #1e293b;
-            --text-muted: #475569;
+            --text-bold: #0f172a;
         }
         body { 
-            margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; color: var(--text-main);
-            background: linear-gradient(135deg, #a6c0fe 0%, #f68084 50%, #bcf0d4 100%);
-            background-attachment: fixed; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 20px; box-sizing: border-box;
+            margin: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-main);
+            background-color: #f4f4f9;
+            background-image: 
+                radial-gradient(at 20% 20%, rgba(56, 189, 248, 0.6) 0px, transparent 50%),
+                radial-gradient(at 80% 10%, rgba(167, 139, 250, 0.6) 0px, transparent 50%),
+                radial-gradient(at 10% 80%, rgba(251, 146, 60, 0.5) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, rgba(52, 211, 153, 0.5) 0px, transparent 50%);
+            background-attachment: fixed;
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+            padding: 30px 15px; 
         }
         
+        /* CLASS KACA IDENTIK DENGAN WEB UTAMA */
         .glass-card {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(14px) saturate(140%);
+            -webkit-backdrop-filter: blur(14px) saturate(140%);
             border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.7);
+            border-radius: 36px; /* Melengkung manis */
         }
 
-        /* LOGIN SCREEN */
-        #login-screen { text-align: center; padding: 40px; width: 100%; max-width: 320px; margin-top: 10vh; }
-        #login-screen img { width: 100px; margin-bottom: 20px; }
+        #login-screen { text-align: center; padding: 40px; width: 100%; max-width: 350px; margin-top: 5vh; }
+        #login-screen img { width: 100px; margin-bottom: 20px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
         
-        /* DASHBOARD SCREEN */
-        #dashboard-screen { display: none; width: 100%; max-width: 800px; padding: 30px; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(255,255,255,0.6); padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        #dashboard-screen { display: none; width: 100%; max-width: 800px; padding: 35px; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(255,255,255,0.6); padding-bottom: 20px; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
         .header-left { display: flex; align-items: center; gap: 15px; }
-        .header img { height: 50px; }
-        .header h2 { margin: 0; font-size: 1.5rem; color: #0f172a; }
+        .header img { height: 50px; border-radius: 50%; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);}
+        .header h2 { margin: 0; font-size: 1.6rem; color: var(--text-bold); font-weight: 800; letter-spacing: -1px;}
         
-        /* NAVIGASI TAB */
-        .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab-btn { padding: 10px 20px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; background: rgba(255,255,255,0.5); color: var(--text-muted); transition: 0.3s; }
-        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .nav-tabs { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 5px;}
+        .tab-btn { padding: 10px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.5); font-weight: 700; cursor: pointer; background: rgba(255,255,255,0.3); color: var(--text-main); transition: all 0.3s; white-space: nowrap;}
+        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-color: white;}
 
-        /* FORM KONTROL */
-        input[type="text"], input[type="password"], textarea { 
-            width: 100%; padding: 14px; margin: 8px 0 15px; border: 1px solid rgba(255,255,255,0.8); background: rgba(255,255,255,0.7); color: var(--text-main); border-radius: 12px; box-sizing: border-box; font-family: inherit; outline: none;
+        label { display: block; font-weight: 700; margin-bottom: 6px; color: var(--text-bold); font-size: 0.95rem;}
+        input[type="text"], input[type="password"], textarea, input[type="file"] { 
+            width: 100%; padding: 14px; margin-bottom: 18px; border: 1px solid rgba(255,255,255,0.8); background: rgba(255,255,255,0.6); color: var(--text-bold); border-radius: 16px; font-family: inherit; outline: none; transition: 0.3s;
         }
-        input:focus, textarea:focus { border-color: var(--primary); background: white; }
-        textarea { height: 200px; resize: vertical; }
-        input[readonly] { background-color: rgba(200,200,200,0.3); color: var(--text-muted); font-weight: bold; cursor: not-allowed; }
+        input:focus, textarea:focus { border-color: var(--primary); background: rgba(255,255,255,0.9); box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);}
+        textarea { height: 250px; resize: vertical; }
+        input[readonly] { background-color: rgba(0,0,0,0.05); color: var(--text-main); cursor: not-allowed; border-style: dashed; }
         
-        /* TOMBOL UTAMA & LOGOUT */
-        button.btn-main { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
-        button.btn-main:hover { background: #059669; transform: translateY(-2px); }
+        /* Wadah Penampil Foto Lama */
+        #old-image-container { display: none; background: rgba(255,255,255,0.5); padding: 12px 15px; border-radius: 16px; margin-bottom: 18px; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.8);}
+        #old-image-name { font-size: 0.85rem; font-weight: 600; word-break: break-all; }
+        
+        button.btn-main { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s; box-shadow: 0 8px 20px rgba(14, 165, 233, 0.3); }
+        button.btn-main:hover { background: var(--primary-hover); transform: translateY(-3px); }
         button.btn-logout { background: transparent; border: 2px solid var(--danger); color: var(--danger); padding: 8px 18px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         button.btn-logout:hover { background: var(--danger); color: white; }
+        button.btn-hapus-foto { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; cursor: pointer;}
 
-        /* LIST BERITA */
-        .news-item { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .news-title { font-weight: bold; color: #334155; }
-        .action-btns button { padding: 6px 12px; border: none; border-radius: 20px; font-size: 12px; cursor: pointer; margin-left: 5px; font-weight: bold;}
+        .news-item { background: rgba(255,255,255,0.7); padding: 15px 20px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border: 1px solid rgba(255,255,255,0.5);}
+        .news-title { font-weight: 700; color: var(--text-bold); font-size: 1.05rem;}
+        .action-btns button { padding: 8px 15px; border: none; border-radius: 20px; font-size: 0.85rem; cursor: pointer; margin-left: 8px; font-weight: bold;}
         .btn-edit { background: #3b82f6; color: white; }
         .btn-delete { background: var(--danger); color: white; }
         
-        .loading { display: none; color: var(--primary); font-weight: bold; text-align: center; margin-top: 10px; }
+        .loading { display: none; color: var(--primary); font-weight: bold; text-align: center; margin-top: 15px; }
+        
+        @media (max-width: 600px) {
+            #dashboard-screen { padding: 20px; border-radius: 28px;}
+            .news-item { flex-direction: column; align-items: flex-start; gap: 10px;}
+            .action-btns { align-self: flex-end; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- LAYAR LOGIN -->
     <div id="login-screen" class="glass-card">
         <img src="../logo_sekolah (1).png" alt="Logo">
-        <h2 style="margin-top:0;">Login Humas</h2>
+        <h2 style="margin-top:0; color: var(--text-bold); font-weight: 800;">Login CMS</h2>
         <input type="text" id="username" placeholder="Username" required>
         <input type="password" id="password" placeholder="Password" required>
-        <button onclick="doLogin()" id="btnLogin" class="btn-main">Masuk</button>
+        <button onclick="doLogin()" id="btnLogin" class="btn-main">Masuk Sistem</button>
         <div id="login-msg" class="loading"></div>
     </div>
 
-    <!-- DASHBOARD UTAMA -->
     <div id="dashboard-screen" class="glass-card">
         <div class="header">
             <div class="header-left">
                 <img src="../logo_sekolah (1).png" alt="Logo">
-                <h2>CMS Sekolah</h2>
+                <h2>Portal Admin</h2>
             </div>
-            <button class="btn-logout" onclick="logout()">Keluar</button>
+            <button class="btn-logout" onclick="logout()">Logout</button>
         </div>
 
         <div class="nav-tabs">
-            <button class="tab-btn active" id="tab-tulis" onclick="switchTab('tulis')">✏️ Tulis Berita</button>
-            <button class="tab-btn" id="tab-daftar" onclick="switchTab('daftar')">📋 Daftar Berita</button>
+            <button class="tab-btn active" id="tab-tulis" onclick="switchTab('tulis')">✏️ Tulis/Edit Berita</button>
+            <button class="tab-btn" id="tab-daftar" onclick="switchTab('daftar')">📋 Daftar Publikasi</button>
         </div>
 
-        <!-- AREA TULIS / EDIT -->
         <div id="area-tulis">
             <input type="hidden" id="edit-sha" value="">
             <input type="hidden" id="edit-path" value="">
+            <input type="hidden" id="old-image-path" value="">
             
             <label>Penulis</label>
             <input type="text" id="author" readonly>
@@ -105,8 +124,14 @@
             <label>Judul Berita</label>
             <input type="text" id="title" placeholder="Masukkan judul..." required>
 
-            <label id="label-image">Foto (Kosongkan jika tidak ingin ganti)</label>
-            <input type="file" id="image" accept="image/*" style="margin-bottom: 15px; display: block;">
+            <label>Foto Dokumentasi</label>
+            
+            <div id="old-image-container">
+                <span id="old-image-name">🖼️ Foto tersimpan: ...</span>
+                <button type="button" class="btn-hapus-foto" onclick="hapusFotoLama()">Hapus Foto</button>
+            </div>
+
+            <input type="file" id="image" accept="image/*">
 
             <label>Isi Berita</label>
             <textarea id="body" placeholder="Tulis beritamu di sini..."></textarea>
@@ -115,9 +140,8 @@
             <div id="publish-msg" class="loading"></div>
         </div>
 
-        <!-- AREA DAFTAR BERITA -->
         <div id="area-daftar" style="display: none;">
-            <div id="list-container">Memuat data...</div>
+            <div id="list-container" style="font-weight: 600; text-align: center;">Memuat data...</div>
         </div>
     </div>
 
@@ -141,9 +165,9 @@
             if(tab === 'tulis' && !document.getElementById('edit-sha').value) resetForm();
         }
 
-        async function doLogin() { /* ... [Sama dengan kode sebelumnya, hanya dipersingkat di sini] ... */
+        async function doLogin() {
             const u = document.getElementById('username').value, p = document.getElementById('password').value, btn = document.getElementById('btnLogin'), msg = document.getElementById('login-msg');
-            if (!u || !p) return; btn.disabled = true; msg.style.display = 'block'; msg.innerText = "Memeriksa...";
+            if (!u || !p) return; btn.disabled = true; msg.style.display = 'block'; msg.innerText = "Memeriksa identitas...";
             const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: u, password: p }) });
             const data = await res.json();
             if (data.success) {
@@ -154,19 +178,35 @@
         }
 
         function logout() { sessionStorage.clear(); location.reload(); }
-        function resetForm() { document.getElementById('title').value = ''; document.getElementById('body').value = ''; document.getElementById('image').value = ''; document.getElementById('edit-sha').value = ''; document.getElementById('edit-path').value = ''; document.getElementById('btnPublish').innerText = '🚀 Terbitkan Berita'; }
+        
+        // FUNGSI RESET FORM SEKARANG MENGHAPUS INFO FOTO LAMA
+        function resetForm() { 
+            document.getElementById('title').value = ''; 
+            document.getElementById('body').value = ''; 
+            document.getElementById('image').value = ''; 
+            document.getElementById('edit-sha').value = ''; 
+            document.getElementById('edit-path').value = ''; 
+            document.getElementById('old-image-path').value = '';
+            document.getElementById('old-image-container').style.display = 'none';
+            document.getElementById('btnPublish').innerText = '🚀 Terbitkan Berita Baru'; 
+        }
 
-        // --- FITUR BARU: LOAD LIST BERITA ---
+        // FUNGSI TOMBOL HAPUS FOTO
+        function hapusFotoLama() {
+            document.getElementById('old-image-path').value = ''; // Kosongkan path
+            document.getElementById('old-image-container').style.display = 'none'; // Sembunyikan UI
+            alert("Foto lama siap dihapus saat berita disimpan.");
+        }
+
         async function loadList() {
             const container = document.getElementById('list-container');
-            container.innerHTML = 'Memuat data dari server...';
+            container.innerHTML = 'Mencari arsip berita...';
             try {
                 const res = await fetch('/api/list'); const data = await res.json();
                 if(data.error) throw new Error(data.error);
-                if(data.length === 0) return container.innerHTML = 'Belum ada berita.';
+                if(data.length === 0) return container.innerHTML = 'Belum ada berita yang dipublikasikan.';
                 
                 let html = '';
-                // Filter hanya file .md dan urutkan dari terbaru
                 data.filter(f => f.name.endsWith('.md')).reverse().forEach(file => {
                     html += `
                     <div class="news-item">
@@ -178,10 +218,9 @@
                     </div>`;
                 });
                 container.innerHTML = html;
-            } catch(e) { container.innerHTML = 'Gagal memuat data.'; }
+            } catch(e) { container.innerHTML = 'Gagal memuat data dari GitHub.'; }
         }
 
-        // --- FITUR BARU: EDIT & DELETE ---
         async function deleteFile(path, sha) {
             if(!confirm('Yakin ingin menghapus berita ini secara permanen?')) return;
             try {
@@ -189,43 +228,60 @@
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: sessionStorage.getItem('cms_user'), password: sessionStorage.getItem('cms_pass'), path: path, sha: sha })
                 });
-                alert('Berita dihapus!'); loadList();
+                alert('Berita sukses dihapus!'); loadList();
             } catch(e) { alert('Gagal menghapus'); }
         }
 
+        // FUNGSI EDIT SEKARANG MEMBACA PATH FOTO LAMA
         async function editFile(path, sha) {
-            alert("Memuat data berita, mohon tunggu sebentar...");
+            document.getElementById('list-container').innerHTML = 'Menarik data berita, mohon tunggu...';
             try {
                 const res = await fetch(`/api/detail?path=${encodeURIComponent(path)}`);
                 const data = await res.json();
                 
-                // Decode teks base64 dari GitHub
                 const rawContent = decodeURIComponent(escape(window.atob(data.content)));
                 
-                // Pisahkan judul dan isi (Mengekstrak Markdown Frontmatter)
                 const titleMatch = rawContent.match(/title:\s*"(.*?)"/);
                 const title = titleMatch ? titleMatch[1] : path.replace('.md', '').split('/').pop();
                 const body = rawContent.replace(/---[\s\S]*?---/, '').trim();
+                
+                // Cari apakah ada gambar sebelumnya
+                const thumbMatch = rawContent.match(/thumbnail:\s*"(.*?)"/);
+                const oldImage = (thumbMatch && thumbMatch[1] !== '') ? thumbMatch[1] : '';
 
-                // Isi Form
                 document.getElementById('title').value = title;
                 document.getElementById('body').value = body;
                 document.getElementById('edit-sha').value = sha;
                 document.getElementById('edit-path').value = path;
-                document.getElementById('btnPublish').innerText = '💾 Simpan Perubahan';
+                document.getElementById('btnPublish').innerText = '💾 Simpan Perubahan Berita';
+                
+                // Tampilkan info gambar lama jika ada
+                const oldPathInput = document.getElementById('old-image-path');
+                const oldImgContainer = document.getElementById('old-image-container');
+                const oldImgName = document.getElementById('old-image-name');
+                
+                oldPathInput.value = oldImage;
+                if (oldImage) {
+                    oldImgContainer.style.display = 'flex';
+                    oldImgName.innerText = '🖼️ Foto tersimpan: ' + oldImage.split('/').pop();
+                } else {
+                    oldImgContainer.style.display = 'none';
+                }
                 
                 switchTab('tulis');
-            } catch(e) { alert('Gagal memuat detail berita'); }
+                loadList(); // Kembalikan teks loading ke semula
+            } catch(e) { alert('Gagal memuat detail berita'); loadList(); }
         }
 
-        // --- PUBLISH / UPDATE (Dimodifikasi sedikit) ---
         async function publish() {
             const title = document.getElementById('title').value, body = document.getElementById('body').value, imgFile = document.getElementById('image').files[0];
             const editSha = document.getElementById('edit-sha').value, editPath = document.getElementById('edit-path').value;
+            const oldImage = document.getElementById('old-image-path').value; // Ambil nilai old image
+            
             const msg = document.getElementById('publish-msg'), btn = document.getElementById('btnPublish');
             
-            if (!title || !body) return alert("Judul dan Isi wajib diisi!");
-            btn.disabled = true; msg.style.display = 'block'; msg.innerText = "Mengirim ke server...";
+            if (!title || !body) return alert("Judul dan Isi berita tidak boleh kosong!");
+            btn.disabled = true; msg.style.display = 'block'; msg.innerText = "Mengirim armada ke server...";
 
             let imageBase64 = null, imageName = null;
             if (imgFile) {
@@ -233,14 +289,15 @@
                 imageName = imgFile.name;
             }
 
-            const payload = { username: sessionStorage.getItem('cms_user'), password: sessionStorage.getItem('cms_pass'), title, body, imageBase64, imageName, updateSha: editSha, updatePath: editPath };
+            // Sisipkan oldImage ke dalam paket pengiriman
+            const payload = { username: sessionStorage.getItem('cms_user'), password: sessionStorage.getItem('cms_pass'), title, body, imageBase64, imageName, updateSha: editSha, updatePath: editPath, oldImage: oldImage };
             
             try {
                 const res = await fetch('/api/publish', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                 const data = await res.json();
-                if (data.success) { alert("✅ Berita berhasil disimpan!"); resetForm(); switchTab('daftar'); } 
-                else { alert("Error: " + data.error); }
-            } catch (err) { alert("Gagal menghubungi server."); }
+                if (data.success) { alert("✅ Eksekusi Berhasil!"); resetForm(); switchTab('daftar'); } 
+                else { alert("Error Server: " + data.error); }
+            } catch (err) { alert("Jaringan terputus ke server."); }
             btn.disabled = false; msg.style.display = 'none';
         }
     </script>
