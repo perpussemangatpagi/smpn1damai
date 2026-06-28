@@ -1,11 +1,188 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Panel - SMPN 1 Damai</title>
-    <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS SMPN 1 Damai</title>
+    <style>
+        :root {
+            --bg-color: #1a1e23;
+            --panel-bg: #272c33;
+            --primary: #f58220; /* Warna Oranye Sveltia */
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #3f4753;
+        }
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        
+        /* LOGIN SCREEN */
+        #login-screen { text-align: center; background: var(--panel-bg); padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 320px; }
+        #login-screen img { width: 100px; margin-bottom: 20px; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid var(--border); background: var(--bg-color); color: white; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        button:hover { background: #d96f18; }
+        
+        /* DASHBOARD SCREEN */
+        #dashboard-screen { display: none; width: 100%; max-width: 800px; padding: 20px; margin-top: 40px; align-self: flex-start; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 20px; }
+        .header img { height: 50px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: var(--text-muted); font-size: 14px; }
+        input[type="text"].full, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); background: var(--panel-bg); color: white; border-radius: 6px; box-sizing: border-box; }
+        textarea { height: 250px; resize: vertical; font-family: inherit; }
+        
+        /* INPUT READONLY (Terkunci) */
+        input[readonly] { background-color: #1a1e23; color: #f58220; font-weight: bold; cursor: not-allowed; border-style: dashed; }
+        
+        .loading { display: none; color: var(--primary); font-weight: bold; text-align: center; margin-top: 10px; }
+    </style>
 </head>
 <body>
+
+    <!-- LAYAR LOGIN -->
+    <div id="login-screen">
+        <img src="../logo_sekolah (1).png" alt="Logo Sekolah">
+        <h2>CMS Login</h2>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button onclick="doLogin()" id="btnLogin">Masuk ke Sistem</button>
+        <div id="login-msg" class="loading"></div>
+    </div>
+
+    <!-- LAYAR DASHBOARD KONTEN -->
+    <div id="dashboard-screen">
+        <div class="header">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <img src="../logo_sekolah (1).png" alt="Logo">
+                <h2 style="margin: 0;">Tulis Berita Baru</h2>
+            </div>
+            <button style="width: auto; background: #dc2626;" onclick="logout()">Logout</button>
+        </div>
+
+        <div class="form-group">
+            <label>Penulis (Terkunci Otomatis)</label>
+            <input type="text" id="author" class="full" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>Judul Berita</label>
+            <input type="text" id="title" class="full" placeholder="Masukkan judul..." required>
+        </div>
+
+        <div class="form-group">
+            <label>Foto Dokumentasi (Opsional)</label>
+            <input type="file" id="image" accept="image/*" style="color: var(--text-muted);">
+        </div>
+
+        <div class="form-group">
+            <label>Isi Berita (Mendukung Format Markdown)</label>
+            <textarea id="body" placeholder="Tulis beritamu di sini..."></textarea>
+        </div>
+
+        <button onclick="publish()" id="btnPublish">🚀 Terbitkan Berita</button>
+        <div id="publish-msg" class="loading"></div>
+    </div>
+
+    <!-- SCRIPT LOGIKA -->
+    <script>
+        // Cek jika sudah login
+        if (sessionStorage.getItem('cms_user')) {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('dashboard-screen').style.display = 'block';
+            document.getElementById('author').value = sessionStorage.getItem('cms_author');
+        }
+
+        async function doLogin() {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            const msg = document.getElementById('login-msg');
+            const btn = document.getElementById('btnLogin');
+
+            if (!u || !p) return alert("Isi username dan password!");
+            
+            btn.disabled = true; msg.style.display = 'block'; msg.innerText = "Memeriksa...";
+
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: u, password: p })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                // Simpan data ke memori browser
+                sessionStorage.setItem('cms_user', u);
+                sessionStorage.setItem('cms_pass', p);
+                sessionStorage.setItem('cms_author', data.author);
+                
+                // Pindah halaman
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('dashboard-screen').style.display = 'block';
+                document.getElementById('author').value = data.author;
+            } else {
+                alert(data.error);
+            }
+            btn.disabled = false; msg.style.display = 'none';
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            location.reload();
+        }
+
+        async function publish() {
+            const title = document.getElementById('title').value;
+            const body = document.getElementById('body').value;
+            const imgFile = document.getElementById('image').files[0];
+            const msg = document.getElementById('publish-msg');
+            const btn = document.getElementById('btnPublish');
+
+            if (!title || !body) return alert("Judul dan Isi Berita wajib diisi!");
+
+            btn.disabled = true; msg.style.display = 'block'; msg.innerText = "Memproses dan mengirim ke GitHub...";
+
+            // Konversi gambar ke Base64 (jika ada)
+            let imageBase64 = null;
+            let imageName = null;
+            if (imgFile) {
+                imageBase64 = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.readAsDataURL(imgFile);
+                });
+                imageName = imgFile.name;
+            }
+
+            const payload = {
+                username: sessionStorage.getItem('cms_user'),
+                password: sessionStorage.getItem('cms_pass'),
+                title: title,
+                body: body,
+                imageBase64: imageBase64,
+                imageName: imageName
+            };
+
+            try {
+                const res = await fetch('/api/publish', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    alert("✅ Sukses! Berita telah diterbitkan di web.");
+                    document.getElementById('title').value = '';
+                    document.getElementById('body').value = '';
+                    document.getElementById('image').value = '';
+                } else {
+                    alert("Error: " + data.error);
+                }
+            } catch (err) {
+                alert("Gagal menghubungi server.");
+            }
+            btn.disabled = false; msg.style.display = 'none';
+        }
+    </script>
 </body>
 </html>
