@@ -1,7 +1,8 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { username, password, title, body, imageBase64, imageName, updateSha, updatePath } = req.body;
+  // Tambahan: Menangkap data oldImage dari frontend
+  const { username, password, title, body, imageBase64, imageName, updateSha, updatePath, oldImage } = req.body;
   
   const usersList = JSON.parse(process.env.CMS_USERS || '[]');
   const user = usersList.find(u => u.user === username && u.pass === password);
@@ -9,25 +10,26 @@ export default async function handler(req, res) {
 
   const author = user.nama; 
   const token = process.env.GITHUB_PAT;
-  const repo = 'perpussemangatpagi/smpn1damai'; 
+  const repo = 'perpussemangatpagi/smpn1damai'; // Sesuaikan repo
 
   const date = new Date();
   const dateStr = date.toISOString().split('T')[0];
   const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
   
-  // Kalau lagi update, pertahankan nama file lamanya. Kalau baru, bikin baru.
   const fileName = updatePath ? updatePath.split('/').pop() : `${dateStr}-${slug}.md`;
   const targetPath = updatePath ? updatePath : `content/berita/${fileName}`;
   
-  let thumbnailPath = '';
+  // LOGIKA GAMBAR BARU: Pakai foto lama sebagai default (jika ada)
+  let thumbnailPath = oldImage || ''; 
 
   try {
     const uploadTasks = [];
 
+    // Jika ada upload foto baru, foto lama akan otomatis ditimpa path-nya
     if (imageBase64 && imageName) {
        const imgExt = imageName.split('.').pop();
        const finalImgName = `${date.getTime()}-${slug}.${imgExt}`;
-       thumbnailPath = `/images/${finalImgName}`;
+       thumbnailPath = `/images/${finalImgName}`; // Path baru
 
        uploadTasks.push(
          fetch(`https://api.github.com/repos/${repo}/contents/images/${finalImgName}`, {
@@ -42,7 +44,7 @@ export default async function handler(req, res) {
     const encodedContent = Buffer.from(markdownContent, 'utf8').toString('base64');
 
     const filePayload = { message: `Update oleh ${author}`, content: encodedContent, branch: 'main' };
-    if (updateSha) filePayload.sha = updateSha; // Kunci sakti untuk menimpa file lama
+    if (updateSha) filePayload.sha = updateSha; 
 
     uploadTasks.push(
       fetch(`https://api.github.com/repos/${repo}/contents/${targetPath}`, {
