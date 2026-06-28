@@ -15,17 +15,43 @@ export default async function handler(req, res) {
     
     const data = await response.json();
     
-    // Kode ini bertugas mengirim Token kembali ke jendela CMS
-    const script = `
-      <script>
-        const message = { token: '${data.access_token}', provider: 'github' };
-        window.opener.postMessage('authorization:github:success:' + JSON.stringify(message), '*');
-        window.close();
-      </script>
-    `;
-    res.setHeader('Content-Type', 'text/html');
-    res.status(200).send(script);
+    // SKENARIO 1: SUKSES MENDAPATKAN TOKEN
+    if (data.access_token) {
+      const script = `
+        <!DOCTYPE html>
+        <html>
+        <body style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+          <h2>Login Berhasil! 🚀</h2>
+          <p>Menghubungkan ke sistem CMS sekolah...</p>
+          <script>
+            const message = { token: '${data.access_token}', provider: 'github' };
+            // Kirim token kembali ke Sveltia
+            window.opener.postMessage('authorization:github:success:' + JSON.stringify(message), '*');
+            
+            // Beri jeda 1.5 detik agar CMS sempat menangkap sinyal sebelum window ditutup
+            setTimeout(() => {
+              window.close();
+            }, 1500);
+          </script>
+        </body>
+        </html>
+      `;
+      res.setHeader('Content-Type', 'text/html');
+      res.status(200).send(script);
+    } 
+    // SKENARIO 2: GAGAL DARI GITHUB
+    else {
+      res.setHeader('Content-Type', 'text/html');
+      res.status(200).send(`
+        <div style="font-family: sans-serif; padding: 20px;">
+          <h2 style="color: red;">⚠️ Gagal Mendapatkan Token</h2>
+          <p>Ini balasan dari server GitHub:</p>
+          <pre style="background: #f4f4f4; padding: 15px; border-radius: 5px;">${JSON.stringify(data, null, 2)}</pre>
+          <p><b>Solusi:</b> Kemungkinan besar kode <code>GITHUB_CLIENT_SECRET</code> di Vercel kurang tepat. Coba buat (generate) Client Secret baru di GitHub, lalu paste ulang di Vercel tanpa ada spasi lebih.</p>
+        </div>
+      `);
+    }
   } catch (error) {
-    res.status(500).send('Login Gagal. Silakan tutup jendela ini dan coba lagi.');
+    res.status(500).send('Terjadi kesalahan pada koneksi server API.');
   }
 }
