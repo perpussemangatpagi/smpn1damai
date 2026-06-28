@@ -1,7 +1,8 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { username, password, title, body, imageBase64, imageName, updateSha, updatePath, oldImage } = req.body;
+  // Ada tambahan penerima "imageToDelete" dari web
+  const { username, password, title, body, imageBase64, imageName, updateSha, updatePath, oldImage, imageToDelete } = req.body;
   
   const usersList = JSON.parse(process.env.CMS_USERS || '[]');
   const user = usersList.find(u => u.user === username && u.pass === password);
@@ -21,7 +22,7 @@ export default async function handler(req, res) {
   let thumbnailPath = oldImage || ''; 
 
   try {
-    // 1. MENGUNGGAH GAMBAR (Tunggu sampai selesai baru lanjut)
+    // 1. UNGGAH FOTO BARU (Jika ada)
     if (imageBase64 && imageName) {
        const imgExt = imageName.split('.').pop();
        const finalImgName = `${date.getTime()}-${slug}.${imgExt}`;
@@ -32,14 +33,13 @@ export default async function handler(req, res) {
          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
          body: JSON.stringify({ message: `Upload foto: ${title}`, content: imageBase64.split(',')[1], branch: 'main' })
        });
-       
        if (!imgRes.ok) {
            const errInfo = await imgRes.json();
-           throw new Error(errInfo.message || 'Gagal mengunggah foto ke GitHub');
+           throw new Error(errInfo.message || 'Gagal mengunggah foto');
        }
     }
 
-    // 2. MENGUNGGAH TEKS BERITA (Setelah gambar sukses/tidak ada gambar)
+    // 2. UNGGAH TEKS BERITA
     const markdownContent = `---\ntitle: "${title}"\ndate: "${date.toISOString()}"\nthumbnail: "${thumbnailPath}"\nauthor: "${author}"\n---\n\n${body}`;
     const encodedContent = Buffer.from(markdownContent, 'utf8').toString('base64');
 
@@ -51,10 +51,27 @@ export default async function handler(req, res) {
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify(filePayload)
     });
-
     if (!mdRes.ok) {
         const errInfo = await mdRes.json();
-        throw new Error(errInfo.message || 'Gagal menyimpan teks berita ke GitHub');
+        throw new Error(errInfo.message || 'Gagal menyimpan berita');
+    }
+
+    // 3. SAPU BERSIH FOTO LAMA (Jika diganti atau dihapus)
+    if (imageToDelete) {
+        try {
+            const cleanDelPath = imageToDelete.startsWith('/') ? imageToDelete.substring(1) : imageToDelete;
+            const getOldImg = await fetch(`https://api.github.com/repos/${repo}/contents/${cleanDelPath}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (getOldImg.ok) {
+                const oldImgData = await getOldImg.json();
+                await fetch(`https://api.github.com/repos/${repo}/contents/${cleanDelPath}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: `Sapu bersih foto lama oleh ${author}`, sha: oldImgData.sha, branch: 'main' })
+                });
+            }
+        } catch (e) { /* Abaikan jika gagal hapus foto lama, agar berita tetap sukses tersimpan */ }
     }
 
     res.status(200).json({ success: true });
