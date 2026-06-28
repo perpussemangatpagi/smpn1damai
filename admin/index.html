@@ -5,34 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CMS SMPN 1 Damai</title>
     <style>
+        /* TEMA PASTEL & GLASSMORPHISM SESUAI GAMBAR */
         :root {
-            --bg-color: #1a1e23;
-            --panel-bg: #272c33;
-            --primary: #f58220; /* Warna Oranye Sveltia */
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --border: #3f4753;
+            --primary: #10b981; /* Hijau Tombol */
+            --danger: #ef4444;
+            --text-main: #1e293b;
+            --text-muted: #475569;
         }
-        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        body { 
+            margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; color: var(--text-main);
+            background: linear-gradient(135deg, #a6c0fe 0%, #f68084 50%, #bcf0d4 100%);
+            background-attachment: fixed; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 20px; box-sizing: border-box;
+        }
         
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
         /* LOGIN SCREEN */
-        #login-screen { text-align: center; background: var(--panel-bg); padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 320px; }
+        #login-screen { text-align: center; padding: 40px; width: 100%; max-width: 320px; margin-top: 10vh; }
         #login-screen img { width: 100px; margin-bottom: 20px; }
-        input[type="text"], input[type="password"] { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid var(--border); background: var(--bg-color); color: white; border-radius: 6px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        button:hover { background: #d96f18; }
         
         /* DASHBOARD SCREEN */
-        #dashboard-screen { display: none; width: 100%; max-width: 800px; padding: 20px; margin-top: 40px; align-self: flex-start; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 20px; }
+        #dashboard-screen { display: none; width: 100%; max-width: 800px; padding: 30px; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(255,255,255,0.6); padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        .header-left { display: flex; align-items: center; gap: 15px; }
         .header img { height: 50px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; color: var(--text-muted); font-size: 14px; }
-        input[type="text"].full, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); background: var(--panel-bg); color: white; border-radius: 6px; box-sizing: border-box; }
-        textarea { height: 250px; resize: vertical; font-family: inherit; }
+        .header h2 { margin: 0; font-size: 1.5rem; color: #0f172a; }
         
-        /* INPUT READONLY (Terkunci) */
-        input[readonly] { background-color: #1a1e23; color: #f58220; font-weight: bold; cursor: not-allowed; border-style: dashed; }
+        /* NAVIGASI TAB */
+        .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { padding: 10px 20px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; background: rgba(255,255,255,0.5); color: var(--text-muted); transition: 0.3s; }
+        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+        /* FORM KONTROL */
+        input[type="text"], input[type="password"], textarea { 
+            width: 100%; padding: 14px; margin: 8px 0 15px; border: 1px solid rgba(255,255,255,0.8); background: rgba(255,255,255,0.7); color: var(--text-main); border-radius: 12px; box-sizing: border-box; font-family: inherit; outline: none;
+        }
+        input:focus, textarea:focus { border-color: var(--primary); background: white; }
+        textarea { height: 200px; resize: vertical; }
+        input[readonly] { background-color: rgba(200,200,200,0.3); color: var(--text-muted); font-weight: bold; cursor: not-allowed; }
+        
+        /* TOMBOL UTAMA & LOGOUT */
+        button.btn-main { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+        button.btn-main:hover { background: #059669; transform: translateY(-2px); }
+        button.btn-logout { background: transparent; border: 2px solid var(--danger); color: var(--danger); padding: 8px 18px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button.btn-logout:hover { background: var(--danger); color: white; }
+
+        /* LIST BERITA */
+        .news-item { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .news-title { font-weight: bold; color: #334155; }
+        .action-btns button { padding: 6px 12px; border: none; border-radius: 20px; font-size: 12px; cursor: pointer; margin-left: 5px; font-weight: bold;}
+        .btn-edit { background: #3b82f6; color: white; }
+        .btn-delete { background: var(--danger); color: white; }
         
         .loading { display: none; color: var(--primary); font-weight: bold; text-align: center; margin-top: 10px; }
     </style>
@@ -40,147 +70,177 @@
 <body>
 
     <!-- LAYAR LOGIN -->
-    <div id="login-screen">
-        <img src="../logo_sekolah (1).png" alt="Logo Sekolah">
-        <h2>CMS Login</h2>
+    <div id="login-screen" class="glass-card">
+        <img src="../logo_sekolah (1).png" alt="Logo">
+        <h2 style="margin-top:0;">Login Humas</h2>
         <input type="text" id="username" placeholder="Username" required>
         <input type="password" id="password" placeholder="Password" required>
-        <button onclick="doLogin()" id="btnLogin">Masuk ke Sistem</button>
+        <button onclick="doLogin()" id="btnLogin" class="btn-main">Masuk</button>
         <div id="login-msg" class="loading"></div>
     </div>
 
-    <!-- LAYAR DASHBOARD KONTEN -->
-    <div id="dashboard-screen">
+    <!-- DASHBOARD UTAMA -->
+    <div id="dashboard-screen" class="glass-card">
         <div class="header">
-            <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="header-left">
                 <img src="../logo_sekolah (1).png" alt="Logo">
-                <h2 style="margin: 0;">Tulis Berita Baru</h2>
+                <h2>CMS Sekolah</h2>
             </div>
-            <button style="width: auto; background: #dc2626;" onclick="logout()">Logout</button>
+            <button class="btn-logout" onclick="logout()">Keluar</button>
         </div>
 
-        <div class="form-group">
-            <label>Penulis (Terkunci Otomatis)</label>
-            <input type="text" id="author" class="full" readonly>
+        <div class="nav-tabs">
+            <button class="tab-btn active" id="tab-tulis" onclick="switchTab('tulis')">✏️ Tulis Berita</button>
+            <button class="tab-btn" id="tab-daftar" onclick="switchTab('daftar')">📋 Daftar Berita</button>
         </div>
 
-        <div class="form-group">
+        <!-- AREA TULIS / EDIT -->
+        <div id="area-tulis">
+            <input type="hidden" id="edit-sha" value="">
+            <input type="hidden" id="edit-path" value="">
+            
+            <label>Penulis</label>
+            <input type="text" id="author" readonly>
+
             <label>Judul Berita</label>
-            <input type="text" id="title" class="full" placeholder="Masukkan judul..." required>
-        </div>
+            <input type="text" id="title" placeholder="Masukkan judul..." required>
 
-        <div class="form-group">
-            <label>Foto Dokumentasi (Opsional)</label>
-            <input type="file" id="image" accept="image/*" style="color: var(--text-muted);">
-        </div>
+            <label id="label-image">Foto (Kosongkan jika tidak ingin ganti)</label>
+            <input type="file" id="image" accept="image/*" style="margin-bottom: 15px; display: block;">
 
-        <div class="form-group">
-            <label>Isi Berita (Mendukung Format Markdown)</label>
+            <label>Isi Berita</label>
             <textarea id="body" placeholder="Tulis beritamu di sini..."></textarea>
+
+            <button onclick="publish()" id="btnPublish" class="btn-main">🚀 Terbitkan Berita</button>
+            <div id="publish-msg" class="loading"></div>
         </div>
 
-        <button onclick="publish()" id="btnPublish">🚀 Terbitkan Berita</button>
-        <div id="publish-msg" class="loading"></div>
+        <!-- AREA DAFTAR BERITA -->
+        <div id="area-daftar" style="display: none;">
+            <div id="list-container">Memuat data...</div>
+        </div>
     </div>
 
-    <!-- SCRIPT LOGIKA -->
     <script>
-        // Cek jika sudah login
         if (sessionStorage.getItem('cms_user')) {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('dashboard-screen').style.display = 'block';
             document.getElementById('author').value = sessionStorage.getItem('cms_author');
         }
 
-        async function doLogin() {
-            const u = document.getElementById('username').value;
-            const p = document.getElementById('password').value;
-            const msg = document.getElementById('login-msg');
-            const btn = document.getElementById('btnLogin');
-
-            if (!u || !p) return alert("Isi username dan password!");
+        function switchTab(tab) {
+            document.getElementById('tab-tulis').classList.remove('active');
+            document.getElementById('tab-daftar').classList.remove('active');
+            document.getElementById('area-tulis').style.display = 'none';
+            document.getElementById('area-daftar').style.display = 'none';
             
-            btn.disabled = true; msg.style.display = 'block'; msg.innerText = "Memeriksa...";
+            document.getElementById('tab-' + tab).classList.add('active');
+            document.getElementById('area-' + tab).style.display = 'block';
 
-            const res = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: u, password: p })
-            });
+            if(tab === 'daftar') loadList();
+            if(tab === 'tulis' && !document.getElementById('edit-sha').value) resetForm();
+        }
+
+        async function doLogin() { /* ... [Sama dengan kode sebelumnya, hanya dipersingkat di sini] ... */
+            const u = document.getElementById('username').value, p = document.getElementById('password').value, btn = document.getElementById('btnLogin'), msg = document.getElementById('login-msg');
+            if (!u || !p) return; btn.disabled = true; msg.style.display = 'block'; msg.innerText = "Memeriksa...";
+            const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: u, password: p }) });
             const data = await res.json();
-
             if (data.success) {
-                // Simpan data ke memori browser
-                sessionStorage.setItem('cms_user', u);
-                sessionStorage.setItem('cms_pass', p);
-                sessionStorage.setItem('cms_author', data.author);
-                
-                // Pindah halaman
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('dashboard-screen').style.display = 'block';
-                document.getElementById('author').value = data.author;
-            } else {
-                alert(data.error);
-            }
+                sessionStorage.setItem('cms_user', u); sessionStorage.setItem('cms_pass', p); sessionStorage.setItem('cms_author', data.author);
+                document.getElementById('login-screen').style.display = 'none'; document.getElementById('dashboard-screen').style.display = 'block'; document.getElementById('author').value = data.author;
+            } else { alert(data.error); }
             btn.disabled = false; msg.style.display = 'none';
         }
 
-        function logout() {
-            sessionStorage.clear();
-            location.reload();
+        function logout() { sessionStorage.clear(); location.reload(); }
+        function resetForm() { document.getElementById('title').value = ''; document.getElementById('body').value = ''; document.getElementById('image').value = ''; document.getElementById('edit-sha').value = ''; document.getElementById('edit-path').value = ''; document.getElementById('btnPublish').innerText = '🚀 Terbitkan Berita'; }
+
+        // --- FITUR BARU: LOAD LIST BERITA ---
+        async function loadList() {
+            const container = document.getElementById('list-container');
+            container.innerHTML = 'Memuat data dari server...';
+            try {
+                const res = await fetch('/api/list'); const data = await res.json();
+                if(data.error) throw new Error(data.error);
+                if(data.length === 0) return container.innerHTML = 'Belum ada berita.';
+                
+                let html = '';
+                // Filter hanya file .md dan urutkan dari terbaru
+                data.filter(f => f.name.endsWith('.md')).reverse().forEach(file => {
+                    html += `
+                    <div class="news-item">
+                        <div class="news-title">${file.name.replace('.md', '')}</div>
+                        <div class="action-btns">
+                            <button class="btn-edit" onclick="editFile('${file.path}', '${file.sha}')">Edit</button>
+                            <button class="btn-delete" onclick="deleteFile('${file.path}', '${file.sha}')">Hapus</button>
+                        </div>
+                    </div>`;
+                });
+                container.innerHTML = html;
+            } catch(e) { container.innerHTML = 'Gagal memuat data.'; }
         }
 
-        async function publish() {
-            const title = document.getElementById('title').value;
-            const body = document.getElementById('body').value;
-            const imgFile = document.getElementById('image').files[0];
-            const msg = document.getElementById('publish-msg');
-            const btn = document.getElementById('btnPublish');
-
-            if (!title || !body) return alert("Judul dan Isi Berita wajib diisi!");
-
-            btn.disabled = true; msg.style.display = 'block'; msg.innerText = "Memproses dan mengirim ke GitHub...";
-
-            // Konversi gambar ke Base64 (jika ada)
-            let imageBase64 = null;
-            let imageName = null;
-            if (imgFile) {
-                imageBase64 = await new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => resolve(reader.result);
-                    reader.readAsDataURL(imgFile);
+        // --- FITUR BARU: EDIT & DELETE ---
+        async function deleteFile(path, sha) {
+            if(!confirm('Yakin ingin menghapus berita ini secara permanen?')) return;
+            try {
+                await fetch('/api/delete', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: sessionStorage.getItem('cms_user'), password: sessionStorage.getItem('cms_pass'), path: path, sha: sha })
                 });
+                alert('Berita dihapus!'); loadList();
+            } catch(e) { alert('Gagal menghapus'); }
+        }
+
+        async function editFile(path, sha) {
+            alert("Memuat data berita, mohon tunggu sebentar...");
+            try {
+                const res = await fetch(`/api/detail?path=${encodeURIComponent(path)}`);
+                const data = await res.json();
+                
+                // Decode teks base64 dari GitHub
+                const rawContent = decodeURIComponent(escape(window.atob(data.content)));
+                
+                // Pisahkan judul dan isi (Mengekstrak Markdown Frontmatter)
+                const titleMatch = rawContent.match(/title:\s*"(.*?)"/);
+                const title = titleMatch ? titleMatch[1] : path.replace('.md', '').split('/').pop();
+                const body = rawContent.replace(/---[\s\S]*?---/, '').trim();
+
+                // Isi Form
+                document.getElementById('title').value = title;
+                document.getElementById('body').value = body;
+                document.getElementById('edit-sha').value = sha;
+                document.getElementById('edit-path').value = path;
+                document.getElementById('btnPublish').innerText = '💾 Simpan Perubahan';
+                
+                switchTab('tulis');
+            } catch(e) { alert('Gagal memuat detail berita'); }
+        }
+
+        // --- PUBLISH / UPDATE (Dimodifikasi sedikit) ---
+        async function publish() {
+            const title = document.getElementById('title').value, body = document.getElementById('body').value, imgFile = document.getElementById('image').files[0];
+            const editSha = document.getElementById('edit-sha').value, editPath = document.getElementById('edit-path').value;
+            const msg = document.getElementById('publish-msg'), btn = document.getElementById('btnPublish');
+            
+            if (!title || !body) return alert("Judul dan Isi wajib diisi!");
+            btn.disabled = true; msg.style.display = 'block'; msg.innerText = "Mengirim ke server...";
+
+            let imageBase64 = null, imageName = null;
+            if (imgFile) {
+                imageBase64 = await new Promise((res) => { const r = new FileReader(); r.onloadend = () => res(r.result); r.readAsDataURL(imgFile); });
                 imageName = imgFile.name;
             }
 
-            const payload = {
-                username: sessionStorage.getItem('cms_user'),
-                password: sessionStorage.getItem('cms_pass'),
-                title: title,
-                body: body,
-                imageBase64: imageBase64,
-                imageName: imageName
-            };
-
+            const payload = { username: sessionStorage.getItem('cms_user'), password: sessionStorage.getItem('cms_pass'), title, body, imageBase64, imageName, updateSha: editSha, updatePath: editPath };
+            
             try {
-                const res = await fetch('/api/publish', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+                const res = await fetch('/api/publish', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                 const data = await res.json();
-
-                if (data.success) {
-                    alert("✅ Sukses! Berita telah diterbitkan di web.");
-                    document.getElementById('title').value = '';
-                    document.getElementById('body').value = '';
-                    document.getElementById('image').value = '';
-                } else {
-                    alert("Error: " + data.error);
-                }
-            } catch (err) {
-                alert("Gagal menghubungi server.");
-            }
+                if (data.success) { alert("✅ Berita berhasil disimpan!"); resetForm(); switchTab('daftar'); } 
+                else { alert("Error: " + data.error); }
+            } catch (err) { alert("Gagal menghubungi server."); }
             btn.disabled = false; msg.style.display = 'none';
         }
     </script>
