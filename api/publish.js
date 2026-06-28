@@ -1,7 +1,6 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  // Tambahan: Menangkap data oldImage dari frontend
   const { username, password, title, body, imageBase64, imageName, updateSha, updatePath, oldImage } = req.body;
   
   const usersList = JSON.parse(process.env.CMS_USERS || '[]');
@@ -10,7 +9,7 @@ export default async function handler(req, res) {
 
   const author = user.nama; 
   const token = process.env.GITHUB_PAT;
-  const repo = 'perpussemangatpagi/smpn1damai'; // Sesuaikan repo
+  const repo = 'perpussemangatpagi/smpn1damai'; 
 
   const date = new Date();
   const dateStr = date.toISOString().split('T')[0];
@@ -19,46 +18,47 @@ export default async function handler(req, res) {
   const fileName = updatePath ? updatePath.split('/').pop() : `${dateStr}-${slug}.md`;
   const targetPath = updatePath ? updatePath : `content/berita/${fileName}`;
   
-  // LOGIKA GAMBAR BARU: Pakai foto lama sebagai default (jika ada)
   let thumbnailPath = oldImage || ''; 
 
   try {
-    const uploadTasks = [];
-
-    // Jika ada upload foto baru, foto lama akan otomatis ditimpa path-nya
+    // 1. MENGUNGGAH GAMBAR (Tunggu sampai selesai baru lanjut)
     if (imageBase64 && imageName) {
        const imgExt = imageName.split('.').pop();
        const finalImgName = `${date.getTime()}-${slug}.${imgExt}`;
-       thumbnailPath = `/images/${finalImgName}`; // Path baru
+       thumbnailPath = `/images/${finalImgName}`;
 
-       uploadTasks.push(
-         fetch(`https://api.github.com/repos/${repo}/contents/images/${finalImgName}`, {
-           method: 'PUT',
-           headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-           body: JSON.stringify({ message: `Upload foto: ${title}`, content: imageBase64.split(',')[1], branch: 'main' })
-         })
-       );
+       const imgRes = await fetch(`https://api.github.com/repos/${repo}/contents/images/${finalImgName}`, {
+         method: 'PUT',
+         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+         body: JSON.stringify({ message: `Upload foto: ${title}`, content: imageBase64.split(',')[1], branch: 'main' })
+       });
+       
+       if (!imgRes.ok) {
+           const errInfo = await imgRes.json();
+           throw new Error(errInfo.message || 'Gagal mengunggah foto ke GitHub');
+       }
     }
 
+    // 2. MENGUNGGAH TEKS BERITA (Setelah gambar sukses/tidak ada gambar)
     const markdownContent = `---\ntitle: "${title}"\ndate: "${date.toISOString()}"\nthumbnail: "${thumbnailPath}"\nauthor: "${author}"\n---\n\n${body}`;
     const encodedContent = Buffer.from(markdownContent, 'utf8').toString('base64');
 
     const filePayload = { message: `Update oleh ${author}`, content: encodedContent, branch: 'main' };
     if (updateSha) filePayload.sha = updateSha; 
 
-    uploadTasks.push(
-      fetch(`https://api.github.com/repos/${repo}/contents/${targetPath}`, {
+    const mdRes = await fetch(`https://api.github.com/repos/${repo}/contents/${targetPath}`, {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify(filePayload)
-      })
-    );
+    });
 
-    const responses = await Promise.all(uploadTasks);
-    for (const response of responses) {
-        if (!response.ok) throw new Error('Gagal menyambung ke GitHub');
+    if (!mdRes.ok) {
+        const errInfo = await mdRes.json();
+        throw new Error(errInfo.message || 'Gagal menyimpan teks berita ke GitHub');
     }
 
     res.status(200).json({ success: true });
-  } catch (error) { res.status(500).json({ error: error.message }); }
+  } catch (error) { 
+    res.status(500).json({ error: error.message }); 
+  }
 }
