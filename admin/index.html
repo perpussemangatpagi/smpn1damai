@@ -114,6 +114,7 @@
             <input type="hidden" id="edit-sha" value="">
             <input type="hidden" id="edit-path" value="">
             <input type="hidden" id="old-image-path" value="">
+            <!-- TONG SAMPAH FOTO RAHASIA -->
             <input type="hidden" id="delete-image-path" value="">
             
             <label>Penulis</label>
@@ -122,19 +123,14 @@
             <label>Judul Berita</label>
             <input type="text" id="title" placeholder="Masukkan judul..." required>
 
-            <label>Foto Dokumentasi</label>
+            <label>Foto Dokumentasi (Bisa pilih lebih dari 1 gambar)</label>
             
             <div id="old-image-container">
                 <span id="old-image-name">🖼️ Foto tersimpan: ...</span>
                 <button type="button" class="btn-hapus-foto" onclick="hapusFotoLama()">Hapus Foto</button>
             </div>
 
-            <input type="file" id="image" accept="image/*">
-            <label>Foto Dokumentasi (Bisa pilih lebih dari 1 gambar)</label>
-            <div id="old-image-container">
-                <span id="old-image-name">🖼️ Foto tersimpan: ...</span>
-                <button type="button" class="btn-hapus-foto" onclick="hapusFotoLama()">Hapus Foto</button>
-            </div>
+            <!-- INI INPUT GAMBAR YANG BENAR (CUMA 1 DAN BISA MULTIPLE) -->
             <input type="file" id="image" accept="image/*" multiple>
 
             <label>Isi Berita</label>
@@ -204,7 +200,6 @@
         function hapusFotoLama() {
             const oldPath = document.getElementById('old-image-path').value;
             if (oldPath) {
-                // Masukkan ke tong sampah
                 document.getElementById('delete-image-path').value = oldPath;
             }
             document.getElementById('old-image-path').value = ''; 
@@ -273,8 +268,8 @@
                 const oldImgName = document.getElementById('old-image-name');
                 
                 oldPathInput.value = oldImage;
-                oldPathInput.dataset.original = oldImage; // Simpan memori foto asli
-                delPathInput.value = ''; // Pastikan tong sampah bersih
+                oldPathInput.dataset.original = oldImage; 
+                delPathInput.value = ''; 
                 
                 if (oldImage) {
                     oldImgContainer.style.display = 'flex';
@@ -320,7 +315,7 @@
         async function publish() {
             const title = document.getElementById('title').value;
             const body = document.getElementById('body').value;
-            const imgFile = document.getElementById('image').files[0];
+            const imgFiles = document.getElementById('image').files; 
             const editSha = document.getElementById('edit-sha').value;
             const editPath = document.getElementById('edit-path').value;
             
@@ -336,24 +331,27 @@
             msg.style.display = 'block'; 
             msg.innerText = "Mempersiapkan data...";
 
-            let imageBase64 = null, imageName = null;
+            let imagesArray = []; 
             
-            if (imgFile) {
-                msg.innerText = "Mengompres ukuran foto...";
-                imageBase64 = await compressImage(imgFile, 1200, 0.7);
-                const originalName = imgFile.name.split('.')[0];
-                imageName = originalName + '.jpg';
+            if (imgFiles.length > 0) {
+                msg.innerText = `Mengompres ${imgFiles.length} foto dari HP Anda... (Mohon tunggu)`;
                 
-                // Kalau upload foto baru, dan dulu ada foto asli, masukin ke tong sampah!
+                for (let i = 0; i < imgFiles.length; i++) {
+                    const compressedBase64 = await compressImage(imgFiles[i], 1200, 0.7);
+                    const originalName = imgFiles[i].name.split('.')[0];
+                    imagesArray.push({ base64: compressedBase64, name: originalName + '.jpg' });
+                }
+                
                 if (originalImage) imageToDelete = originalImage;
             }
 
-            msg.innerText = "Menerbitkan dan membersihkan server...";
+            msg.innerText = "Mengirim teks dan seluruh armada foto ke server...";
 
             const payload = { 
                 username: sessionStorage.getItem('cms_user'), 
                 password: sessionStorage.getItem('cms_pass'), 
-                title, body, imageBase64, imageName, 
+                title, body, 
+                images: imagesArray, 
                 updateSha: editSha, updatePath: editPath, 
                 oldImage: oldImage, imageToDelete: imageToDelete
             };
@@ -367,7 +365,7 @@
                 const data = await res.json();
                 
                 if (data.success) { 
-                    alert("✅ Eksekusi Berhasil! Web dan Server kini bersih."); 
+                    alert("✅ Eksekusi Berhasil! Semua foto telah mengudara."); 
                     resetForm(); 
                     switchTab('daftar'); 
                 } else { 
