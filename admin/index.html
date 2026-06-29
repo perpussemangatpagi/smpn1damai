@@ -130,6 +130,12 @@
             </div>
 
             <input type="file" id="image" accept="image/*">
+            <label>Foto Dokumentasi (Bisa pilih lebih dari 1 gambar)</label>
+            <div id="old-image-container">
+                <span id="old-image-name">🖼️ Foto tersimpan: ...</span>
+                <button type="button" class="btn-hapus-foto" onclick="hapusFotoLama()">Hapus Foto</button>
+            </div>
+            <input type="file" id="image" accept="image/*" multiple>
 
             <label>Isi Berita</label>
             <textarea id="body" placeholder="Tulis beritamu di sini..."></textarea>
