@@ -29,7 +29,6 @@
             box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.7);
         }
 
-        /* HEADER & NAVIGASI */
         .header-container {
             position: sticky; top: 15px; z-index: 100;
             width: 92%; max-width: 1000px; margin: 0 auto 2rem;
@@ -41,10 +40,7 @@
         .nav-brand img { height: 40px; width: 40px; border-radius: 50%; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .nav-brand .title { font-weight: 800; font-size: 1.2rem; color: #0f172a; letter-spacing: -0.5px; }
 
-        /* WADAH NAVIGASI KEKINIAN (TANPA PANAH) */
-        .nav-wrapper { 
-            position: relative; display: flex; align-items: center; flex: 1; justify-content: flex-end; max-width: 65%; 
-        }
+        .nav-wrapper { position: relative; display: flex; align-items: center; flex: 1; justify-content: flex-end; max-width: 65%; }
         nav { width: 100%; overflow: hidden; } 
         nav ul {
             display: flex; gap: 1.2rem; list-style: none; overflow-x: auto; 
@@ -69,8 +65,8 @@
         .section-title { font-size: 2.2rem; font-weight: 800; color: #0f172a; margin-bottom: 1.5rem; border-bottom: 3px solid rgba(255,255,255,0.5); padding-bottom: 10px; display: inline-block; }
 
         .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .news-card { background: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.6); border-radius: 24px; overflow: hidden; transition: 0.3s; display: flex; flex-direction: column; }
-        .news-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); background: rgba(255,255,255,0.6); }
+        .news-card { background: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.8); border-radius: 24px; overflow: hidden; transition: 0.3s; display: flex; flex-direction: column; }
+        .news-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); background: rgba(255,255,255,0.8); }
         .news-img { width: 100%; height: 180px; object-fit: cover; background: #e2e8f0; }
         .news-content { padding: 20px; flex: 1; display: flex; flex-direction: column; }
         .news-date { font-size: 0.8rem; color: #64748b; font-weight: 600; margin-bottom: 5px; }
@@ -103,27 +99,31 @@
         .modal-body { padding: 30px; }
         .modal-body h2 { font-size: 2rem; color: #0f172a; margin-bottom: 10px; line-height: 1.2; }
         .modal-body .meta { color: #64748b; font-size: 0.9rem; font-weight: 600; margin-bottom: 25px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
-        /* Style supaya gambar di dalam artikel tidak kepanjangan */
         .modal-body .text-content { font-size: 1.05rem; color: #334155; line-height: 1.8; white-space: pre-wrap; }
-        .modal-body .text-content img { max-width: 100%; border-radius: 12px; margin: 15px 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
-        /* RESPONSIF MOBILE */
+        /* ========================================== */
+        /* PERBAIKAN TOTAL UNTUK LAYAR HP (MOBILE)    */
+        /* ========================================== */
         @media (max-width: 768px) {
             .header-container { flex-direction: column; padding: 15px; gap: 15px; }
             .nav-brand { justify-content: center; width: 100%; }
             .nav-wrapper { width: 100%; max-width: 100%; justify-content: flex-start; }
-            /* Efek Masking Fade Biar Keliatan Kalo Bisa di-Swipe */
-            nav {
-                -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
-                mask-image: linear-gradient(to right, black 85%, transparent 100%);
-            }
+            nav { -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%); mask-image: linear-gradient(to right, black 85%, transparent 100%); }
             nav ul { padding: 5px 30px 5px 10px; gap: 1rem; } 
             
             .hero h1 { font-size: 2.2rem; }
-            .section-card { padding: 2rem 1.5rem; border-radius: 28px; }
+            
+            /* Penyesuaian Ruang & Ukuran Font Biar Rapi */
+            .container { padding: 0 15px 3rem; }
+            .section-card { padding: 1.8rem 1.2rem; border-radius: 24px; margin-bottom: 2rem; }
+            .section-title { font-size: 1.6rem; margin-bottom: 1.2rem; } /* Ukuran dikecilkan */
+            
+            .news-grid { grid-template-columns: 1fr; gap: 15px; } /* Grid presisi 1 kolom */
             .layanan-grid { grid-template-columns: 1fr; }
+            
             .modal-img { height: 200px; }
             .modal-body { padding: 20px; }
+            .modal-body h2 { font-size: 1.5rem; } /* Judul modal lebih kecil di HP */
         }
     </style>
 </head>
@@ -270,12 +270,15 @@
                     const dateRaw = teksMentah.match(/date:\s*"(.*?)"/)?.[1] || '';
                     const author = teksMentah.match(/author:\s*"(.*?)"/)?.[1] || 'Humas';
                     
-                    let thumb = teksMentah.match(/thumbnail:\s*"(.*?)"/)?.[1] || '';
+                    // JURUS CACHE BUSTER SAKTI: Bikin GitHub ngeluarin file paling fresh detik ini juga!
+                    const timestamp = new Date().getTime();
                     
-                    // JURUS FALLBACK: Kalau Vercel belum siap, paksa narik dari Raw GitHub
+                    let thumb = teksMentah.match(/thumbnail:\s*"(.*?)"/)?.[1] || '';
                     let rawFallback = thumb;
+                    
                     if (thumb && thumb.startsWith('/')) {
-                        rawFallback = RAW_URL + thumb; 
+                        // Tambahin Cache Buster ke URL Gambar Asli
+                        rawFallback = `${RAW_URL}${thumb}?t=${timestamp}`; 
                     } else if (!thumb) {
                         thumb = 'https://via.placeholder.com/400x200?text=Tidak+Ada+Foto';
                         rawFallback = thumb;
@@ -284,15 +287,17 @@
                     const tglObj = new Date(dateRaw);
                     const tanggalCantik = isNaN(tglObj) ? '-' : tglObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
-                    // Ubah format markdown gambar ![alt](url) supaya mengarah ke raw_url juga (jika ada gambar tambahan)
                     let body = teksMentah.replace(/---[\s\S]*?---/, '').trim();
-                    body = body.replace(/!\[(.*?)\]\((\/images\/.*?)\)/g, `![$1](${RAW_URL}$2)`); // Sulap gambar ekstra
+                    
+                    // Sulap markdown gambar tambahan (galeri) supaya ikut dipasangi Cache Buster
+                    body = body.replace(/!\[(.*?)\]\((\/images\/.*?)\)/g, `![$1](${RAW_URL}$2?t=${timestamp})`); 
 
+                    // Bersihkan kode gambar dari text snippet yang tampil di depan
                     let snippet = body.replace(/[#*`_>!\[\]()]/g, '').substring(0, 110) + '...';
+                    snippet = snippet.replace(/https:\/\/raw\.githubusercontent\.com[^\s]*/g, ''); // Hapus sisa URL nyasar
                     
                     databaseBerita.push({ title, thumb, rawFallback, tanggalCantik, author, body });
 
-                    // Pemasangan onerror untuk menjamin foto tidak pernah rusak
                     htmlKartu += `
                         <div class="news-card">
                             <img src="${thumb}" onerror="this.onerror=null; this.src='${rawFallback}';" alt="${title}" class="news-img" loading="lazy">
@@ -315,16 +320,16 @@
             const data = databaseBerita[index];
             const imgEl = document.getElementById('modal-img');
             
-            // Pasang fallback juga di modal
             imgEl.src = data.thumb;
             imgEl.onerror = function() { this.onerror=null; this.src = data.rawFallback; };
             
             document.getElementById('modal-title').innerText = data.title;
             document.getElementById('modal-meta').innerText = `${data.tanggalCantik} | Oleh: ${data.author}`;
             
-            // Sulap markdown menjadi HTML: Gambar dan Enter
             let htmlBody = data.body.replace(/\n/g, '<br>');
-            htmlBody = htmlBody.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1">'); // Render gambar di dalam berita
+            
+            // Render gambar tambahan dengan styling CSS yang cakep (biar nggak bleber ke samping)
+            htmlBody = htmlBody.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="width: 100%; border-radius: 12px; margin: 15px 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: block;">');
             
             document.getElementById('modal-text').innerHTML = htmlBody;
             
