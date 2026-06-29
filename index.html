@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SMP Negeri 1 Damai</title>
     
+    <!-- FontAwesome untuk Ikon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
@@ -33,7 +34,7 @@
         .header-container {
             position: sticky; top: 15px; z-index: 100;
             width: 92%; max-width: 1000px; margin: 0 auto 2rem;
-            border-radius: 30px; padding: 15px 20px;
+            border-radius: 30px; padding: 15px 25px;
             display: flex; justify-content: space-between; align-items: center;
         }
 
@@ -41,32 +42,38 @@
         .nav-brand img { height: 40px; width: 40px; border-radius: 50%; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .nav-brand .title { font-weight: 800; font-size: 1.2rem; color: #0f172a; letter-spacing: -0.5px; }
 
-        /* WADAH NAVIGASI DENGAN PANAH INDIKATOR */
-        .nav-wrapper { position: relative; display: flex; align-items: center; flex: 1; justify-content: flex-end; max-width: 60%; }
+        /* WADAH NAVIGASI DENGAN PANAH INDIKATOR (REVISI) */
+        .nav-wrapper { position: relative; display: flex; align-items: center; flex: 1; justify-content: flex-end; max-width: 65%; }
+        nav { width: 100%; overflow: hidden; } /* Bungkus nav biar rapi */
         nav ul {
-            display: flex; gap: 1.5rem; list-style: none; overflow-x: auto; 
-            scroll-behavior: smooth; padding: 5px; margin: 0;
+            display: flex; gap: 1.2rem; list-style: none; overflow-x: auto; 
+            scroll-behavior: smooth; 
+            padding: 5px 35px; /* Jarak aman 35px di kiri-kanan biar nggak nabrak panah! */ 
+            margin: 0;
             -ms-overflow-style: none; scrollbar-width: none;
         }
         nav ul::-webkit-scrollbar { display: none; }
         nav ul li { flex: 0 0 auto; }
         nav ul li a {
             text-decoration: none; color: #1e293b; font-weight: 700; font-size: 0.95rem;
-            padding: 8px 16px; border-radius: 20px; transition: 0.3s;
+            padding: 8px 12px; border-radius: 20px; transition: 0.3s;
         }
         nav ul li a:hover { background: rgba(255,255,255,0.6); color: #0ea5e9; }
 
-        /* TOMBOL PANAH (SEMBUNYI DI DESKTOP) */
+        /* TOMBOL PANAH (REVISI TAMPILAN) */
         .nav-arrow {
-            display: none; position: absolute; top: 50%; transform: translateY(-50%);
-            background: white; border: none; width: 28px; height: 28px; border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer; color: #0ea5e9; font-weight: bold; z-index: 2;
+            display: none; /* Muncul via JS */
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.9); width: 32px; height: 32px; border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15); cursor: pointer; color: #0ea5e9; font-weight: bold; z-index: 10;
+            justify-content: center; align-items: center; /* Ikon ke tengah */
         }
-        .nav-arrow.left { left: -10px; }
-        .nav-arrow.right { right: -10px; }
+        .nav-arrow.left { left: 0; }
+        .nav-arrow.right { right: 0; }
 
         /* HERO KAMPUS */
-        .hero { text-align: center; padding: 3rem 20px 2rem; }
+        .hero { text-align: center; padding: 2rem 20px; }
         .hero h1 { font-size: 3.5rem; font-weight: 900; letter-spacing: -2px; color: #0f172a; line-height: 1.1; margin-bottom: 1rem; }
         .hero p { font-size: 1.2rem; color: #334155; max-width: 700px; margin: 0 auto; font-weight: 500; }
 
@@ -118,10 +125,11 @@
 
         /* RESPONSIF MOBILE */
         @media (max-width: 768px) {
-            .header-container { flex-direction: column; padding: 12px 15px; gap: 12px; }
+            .header-container { flex-direction: column; padding: 15px; gap: 15px; }
             .nav-brand { justify-content: center; width: 100%; }
-            .nav-wrapper { width: 100%; max-width: 100%; }
-            nav ul { padding: 0 20px; }
+            .nav-wrapper { width: 100%; max-width: 100%; justify-content: center; }
+            /* Memastikan Jarak Aman 35px dipertahankan di HP */
+            nav ul { padding: 5px 35px; gap: 1rem; } 
             .hero h1 { font-size: 2.2rem; }
             .section-card { padding: 2rem 1.5rem; border-radius: 28px; }
             .layanan-grid { grid-template-columns: 1fr; }
@@ -132,6 +140,7 @@
 </head>
 <body>
 
+    <!-- HEADER & NAVIGASI -->
     <header class="header-container glass">
         <div class="nav-brand">
             <img src="logo_sekolah (1).png" alt="Logo SMPN 1 Damai" onerror="this.src='https://via.placeholder.com/40'">
@@ -161,6 +170,7 @@
 
     <div class="container">
         
+        <!-- SECTION BERANDA (BERITA DARI CMS) -->
         <section id="beranda" class="section-card glass">
             <h2 class="section-title">Berita & Informasi Terbaru</h2>
             <div id="news-container" class="news-grid">
@@ -170,27 +180,32 @@
             </div>
         </section>
 
+        <!-- SECTION PROFIL (Menyusul) -->
         <section id="profil" class="section-card glass">
             <h2 class="section-title">Profil Sekolah</h2>
             <p>Sejarah dan profil lengkap SMP Negeri 1 Damai sedang dalam proses pembaruan. Kami akan segera menampilkan informasi detail mengenai perjalanan dan pencapaian sekolah kami.</p>
         </section>
 
+        <!-- SECTION VISI MISI (Menyusul) -->
         <section id="visimisi" class="section-card glass">
             <h2 class="section-title">Visi & Misi</h2>
             <p><strong>Visi:</strong> Mewujudkan peserta didik yang beriman, cerdas, terampil, dan berwawasan lingkungan.</p>
             <p style="margin-top: 10px;"><strong>Misi:</strong> <i>(Detail misi akan segera diperbarui)</i></p>
         </section>
 
+        <!-- SECTION STRUKTUR (Menyusul) -->
         <section id="struktur" class="section-card glass">
             <h2 class="section-title">Struktur Organisasi</h2>
             <p>Bagan struktur organisasi Kepala Sekolah, Dewan Guru, dan Staf Tata Usaha SMPN 1 Damai akan ditampilkan pada sesi ini.</p>
         </section>
 
+        <!-- SECTION LAYANAN WEB / SUBDOMAIN -->
         <section id="layanan" class="section-card glass">
             <h2 class="section-title">Layanan Ekosistem Digital</h2>
             <p style="margin-bottom: 20px;">Akses cepat menuju portal layanan terpadu milik SMPN 1 Damai:</p>
             
             <div class="layanan-grid">
+                <!-- GANTI URL INI DENGAN LINK SUBDOMAIN ASLINYA NANTI -->
                 <a href="https://perpus.smpn1damai.web.id" class="layanan-card">
                     <i class="fa-solid fa-book-open-reader"></i>
                     <h3>Perpus Semangat Pagi</h3>
@@ -199,12 +214,13 @@
                 
                 <a href="https://exambro.smpn1damai.web.id" class="layanan-card">
                     <i class="fa-solid fa-shield-halved"></i>
-                    <h3>Exambro CBT</h3>
+                    <h3>ExamBro</h3>
                     <p>Aplikasi ujian resmi anti kecurangan (Android).</p>
                 </a>
             </div>
         </section>
 
+        <!-- SECTION KONTAK -->
         <section id="kontak" class="section-card glass" style="margin-bottom: 1rem;">
             <h2 class="section-title">Hubungi Kami</h2>
             <div class="kontak-wrapper">
@@ -236,6 +252,7 @@
         &copy; 2026 | Tim IT Terpadu SMPN 1 Damai
     </footer>
 
+    <!-- WADAH MODAL UNTUK BACA BERITA PENUH -->
     <div id="modal-berita" onclick="tutupModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="close-btn" onclick="tutupModal(true)">&times;</div>
@@ -257,10 +274,9 @@
         const arrowRight = document.querySelector('.nav-arrow.right');
 
         function cekPanah() {
-            // Munculkan panah kiri jika sudah scroll ke kanan
+            // Perhatikan penggunaan 'flex' agar ikon di dalam panah tetap ke tengah
             arrowLeft.style.display = navList.scrollLeft > 5 ? 'flex' : 'none';
             
-            // Munculkan panah kanan jika masih ada sisa ruang untuk scroll
             const sisaScroll = navList.scrollWidth - navList.clientWidth - navList.scrollLeft;
             arrowRight.style.display = sisaScroll > 5 ? 'flex' : 'none';
         }
@@ -269,34 +285,25 @@
             navList.scrollBy({ left: jarak, behavior: 'smooth' });
         }
 
-        // Pasang pendeteksi scroll dan perubahan ukuran layar
         navList.addEventListener('scroll', cekPanah);
         window.addEventListener('resize', cekPanah);
-        
-        // Panggil sekali saat web pertama kali dimuat
         setTimeout(cekPanah, 500); 
 
         // ==========================================
         // LOGIKA TARIK BERITA DARI CMS (GITHUB API)
         // ==========================================
-        
-        // REPO GITHUB ENTE (Sesuai dengan yang di CMS)
         const REPO = 'perpussemangatpagi/smpn1damai';
         const RAW_URL = `https://raw.githubusercontent.com/${REPO}/main`;
-
-        // Array rahasia untuk menyimpan data berita utuh
         let databaseBerita = [];
 
         async function muatBerita() {
             const wadah = document.getElementById('news-container');
             try {
-                // 1. Minta daftar file berita dari API Vercel yang udah kita buat
                 const res = await fetch('/api/list');
                 const files = await res.json();
                 
                 if (files.error) throw new Error();
 
-                // Ambil 6 berita terbaru saja (yang berakhiran .md)
                 const fileBerita = files.filter(f => f.name.endsWith('.md')).reverse().slice(0, 6);
                 
                 if (fileBerita.length === 0) {
@@ -304,42 +311,34 @@
                 }
                 
                 let htmlKartu = '';
-                databaseBerita = []; // Reset memori
+                databaseBerita = []; 
 
-                // 2. Bongkar isi tiap file berita satu per satu
                 for (let i = 0; i < fileBerita.length; i++) {
                     const file = fileBerita[i];
                     const dRes = await fetch(`/api/detail?path=${file.path}`);
                     const dData = await dRes.json();
                     
-                    // Terjemahkan dari bahasa mesin (Base64) ke teks biasa
                     const teksMentah = decodeURIComponent(escape(window.atob(dData.content)));
                     
-                    // Ekstrak informasi dari kepala file (Frontmatter)
                     const title = teksMentah.match(/title:\s*"(.*?)"/)?.[1] || 'Tanpa Judul';
                     const dateRaw = teksMentah.match(/date:\s*"(.*?)"/)?.[1] || '';
                     const author = teksMentah.match(/author:\s*"(.*?)"/)?.[1] || 'Humas';
                     let thumb = teksMentah.match(/thumbnail:\s*"(.*?)"/)?.[1] || '';
                     
-                    // TRIK BYPASS RAW: Biar gambar langsung muncul walau vercel belum redeploy!
                     if (thumb && thumb.startsWith('/')) {
                         thumb = RAW_URL + thumb;
                     } else if (!thumb) {
-                        thumb = 'https://via.placeholder.com/400x200?text=Tidak+Ada+Foto'; // Gambar cadangan
+                        thumb = 'https://via.placeholder.com/400x200?text=Tidak+Ada+Foto'; 
                     }
 
-                    // Percantik Format Tanggal
                     const tglObj = new Date(dateRaw);
                     const tanggalCantik = isNaN(tglObj) ? '-' : tglObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
-                    // Ambil isi teksnya dan bersihkan sedikit format markdown kasarnya
                     let body = teksMentah.replace(/---[\s\S]*?---/, '').trim();
                     let snippet = body.replace(/[#*`_>]/g, '').substring(0, 110) + '...';
                     
-                    // Simpan data utuh ke memori untuk ditampilkan di Modal nanti
                     databaseBerita.push({ title, thumb, tanggalCantik, author, body });
 
-                    // Rakit HTML Kartunya
                     htmlKartu += `
                         <div class="news-card">
                             <img src="${thumb}" alt="${title}" class="news-img" loading="lazy">
@@ -368,22 +367,19 @@
             document.getElementById('modal-img').src = data.thumb;
             document.getElementById('modal-title').innerText = data.title;
             document.getElementById('modal-meta').innerText = `${data.tanggalCantik} | Oleh: ${data.author}`;
-            
-            // Format sederhana: mengubah enter menjadi <br>
             document.getElementById('modal-text').innerHTML = data.body.replace(/\n/g, '<br>');
             
             document.getElementById('modal-berita').style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // Kunci scroll layar utama
+            document.body.style.overflow = 'hidden'; 
         }
 
         function tutupModal(isCloseBtn) {
             if(isCloseBtn === true || isCloseBtn.target.id === 'modal-berita') {
                 document.getElementById('modal-berita').style.display = 'none';
-                document.body.style.overflow = 'auto'; // Buka kunci scroll
+                document.body.style.overflow = 'auto'; 
             }
         }
 
-        // Jalankan fungsi tarik berita saat web dibuka
         muatBerita();
 
     </script>
