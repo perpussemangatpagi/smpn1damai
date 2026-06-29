@@ -2,139 +2,390 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMPN 1 Damai - Sedang Dalam Pengerjaan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SMP Negeri 1 Damai</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; scroll-behavior: smooth; }
+        html { scroll-padding-top: 100px; }
         body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            
-            /* Animasi Latar Belakang Mesh Gradient */
-            background-color: #f1f2f6;
+            background-color: #f4f4f9;
             background-image: 
-                radial-gradient(at 0% 0%, hsla(210,100%,80%,0.8) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, hsla(160,100%,80%,0.6) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, hsla(210,100%,80%,0.8) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, hsla(160,100%,80%,0.6) 0px, transparent 50%);
-            background-size: 150% 150%;
-            animation: gradientAnim 15s ease infinite;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #2c3e50;
-            text-align: center;
+                radial-gradient(at 20% 20%, rgba(56, 189, 248, 0.6) 0px, transparent 50%),
+                radial-gradient(at 80% 10%, rgba(167, 139, 250, 0.6) 0px, transparent 50%),
+                radial-gradient(at 10% 80%, rgba(251, 146, 60, 0.5) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, rgba(52, 211, 153, 0.5) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: #1e293b; line-height: 1.6;
         }
 
-        @keyframes gradientAnim {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .glass {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(14px) saturate(140%);
+            -webkit-backdrop-filter: blur(14px) saturate(140%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.7);
         }
 
-        .container {
-            /* Efek Glassmorphism (Kaca Transparan) */
-            background: rgba(255, 255, 255, 0.45);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-            max-width: 500px;
-            width: 85%;
-            position: relative;
-            z-index: 1;
+        /* HEADER & NAVIGASI */
+        .header-container {
+            position: sticky; top: 15px; z-index: 100;
+            width: 92%; max-width: 1000px; margin: 0 auto 2rem;
+            border-radius: 30px; padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
         }
 
-        .logo {
-            max-width: 110px;
-            height: auto;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
-        }
+        .nav-brand { display: flex; align-items: center; gap: 12px; }
+        .nav-brand img { height: 40px; width: 40px; border-radius: 50%; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .nav-brand .title { font-weight: 800; font-size: 1.2rem; color: #0f172a; letter-spacing: -0.5px; }
 
-        h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #1e272e;
-            font-weight: 700;
+        /* WADAH NAVIGASI DENGAN PANAH INDIKATOR */
+        .nav-wrapper { position: relative; display: flex; align-items: center; flex: 1; justify-content: flex-end; max-width: 60%; }
+        nav ul {
+            display: flex; gap: 1.5rem; list-style: none; overflow-x: auto; 
+            scroll-behavior: smooth; padding: 5px; margin: 0;
+            -ms-overflow-style: none; scrollbar-width: none;
         }
-
-        p {
-            font-size: 15px;
-            color: #485460;
-            line-height: 1.6;
-            margin-bottom: 25px;
+        nav ul::-webkit-scrollbar { display: none; }
+        nav ul li { flex: 0 0 auto; }
+        nav ul li a {
+            text-decoration: none; color: #1e293b; font-weight: 700; font-size: 0.95rem;
+            padding: 8px 16px; border-radius: 20px; transition: 0.3s;
         }
+        nav ul li a:hover { background: rgba(255,255,255,0.6); color: #0ea5e9; }
 
-        .loader {
-            margin: 20px auto;
-            width: 45px;
-            height: 45px;
-            border: 4px solid rgba(255, 255, 255, 0.4);
-            border-top: 4px solid #0fb9b1; /* Aksen hijau toska/kebiruan */
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        /* TOMBOL PANAH (SEMBUNYI DI DESKTOP) */
+        .nav-arrow {
+            display: none; position: absolute; top: 50%; transform: translateY(-50%);
+            background: white; border: none; width: 28px; height: 28px; border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer; color: #0ea5e9; font-weight: bold; z-index: 2;
         }
+        .nav-arrow.left { left: -10px; }
+        .nav-arrow.right { right: -10px; }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        /* HERO KAMPUS */
+        .hero { text-align: center; padding: 3rem 20px 2rem; }
+        .hero h1 { font-size: 3.5rem; font-weight: 900; letter-spacing: -2px; color: #0f172a; line-height: 1.1; margin-bottom: 1rem; }
+        .hero p { font-size: 1.2rem; color: #334155; max-width: 700px; margin: 0 auto; font-weight: 500; }
 
-        .links {
-            margin-top: 30px;
-            padding-top: 25px;
-            border-top: 1px solid rgba(255, 255, 255, 0.5);
-        }
+        /* KONTEN UTAMA */
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px 4rem; }
+        .section-card { padding: 3rem; border-radius: 36px; margin-bottom: 3rem; }
+        .section-title { font-size: 2.2rem; font-weight: 800; color: #0f172a; margin-bottom: 1.5rem; border-bottom: 3px solid rgba(255,255,255,0.5); padding-bottom: 10px; display: inline-block; }
 
-        .links p {
-            margin-bottom: 15px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #1e272e;
-        }
+        /* BERITA (GRID KARTU) */
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .news-card { background: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.6); border-radius: 24px; overflow: hidden; transition: 0.3s; display: flex; flex-direction: column; }
+        .news-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); background: rgba(255,255,255,0.6); }
+        .news-img { width: 100%; height: 180px; object-fit: cover; background: #e2e8f0; }
+        .news-content { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+        .news-date { font-size: 0.8rem; color: #64748b; font-weight: 600; margin-bottom: 5px; }
+        .news-title { font-size: 1.2rem; font-weight: 800; color: #0f172a; margin-bottom: 10px; line-height: 1.3; }
+        .news-snippet { font-size: 0.9rem; color: #475569; margin-bottom: 15px; flex: 1; }
+        .btn-baca { text-align: center; display: block; width: 100%; padding: 10px; background: #0ea5e9; color: white; text-decoration: none; border-radius: 12px; font-weight: bold; transition: 0.3s; }
+        .btn-baca:hover { background: #0284c7; }
 
-        .btn-link {
-            display: inline-block;
-            margin: 5px 8px;
-            padding: 10px 22px;
-            background: rgba(255, 255, 255, 0.55);
-            color: #0984e3; /* Aksen link biru */
-            text-decoration: none;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: bold;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-        }
+        /* LAYANAN SUBDOMAIN GRID */
+        .layanan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .layanan-card { text-align: center; padding: 2rem; border-radius: 24px; background: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.6); transition: 0.3s; text-decoration: none; color: inherit; display: block; }
+        .layanan-card:hover { background: rgba(255,255,255,0.6); transform: scale(1.02); }
+        .layanan-card i { font-size: 3rem; margin-bottom: 15px; }
+        .layanan-card.perpus i { color: #10b981; }
+        .layanan-card.exambro i { color: #3b82f6; }
+        .layanan-card h3 { font-size: 1.5rem; color: #0f172a; margin-bottom: 5px; }
 
-        .btn-link:hover {
-            background: rgba(255, 255, 255, 0.9);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        /* KONTAK FOOTER */
+        .kontak-wrapper { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; text-align: center; }
+        .kontak-item { flex: 1; min-width: 200px; padding: 15px; }
+        .kontak-item i { font-size: 2rem; color: #0ea5e9; margin-bottom: 10px; }
+        .kontak-item p { font-weight: 600; color: #334155; }
+        .kontak-item a { color: #0f172a; text-decoration: none; font-weight: 800; transition: 0.3s; }
+        .kontak-item a:hover { color: #0ea5e9; }
+
+        footer { text-align: center; padding: 20px; font-weight: 600; color: #64748b; }
+
+        /* MODAL BACA BERITA */
+        #modal-berita { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(5px); }
+        .modal-content { background: #f8fafc; width: 100%; max-width: 700px; max-height: 90vh; border-radius: 24px; overflow-y: auto; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; font-weight: bold; color: white; background: rgba(0,0,0,0.5); width: 35px; height: 35px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 10; }
+        .modal-img { width: 100%; height: 300px; object-fit: cover; background: #e2e8f0; }
+        .modal-body { padding: 30px; }
+        .modal-body h2 { font-size: 2rem; color: #0f172a; margin-bottom: 10px; line-height: 1.2; }
+        .modal-body .meta { color: #64748b; font-size: 0.9rem; font-weight: 600; margin-bottom: 25px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+        .modal-body .text-content { font-size: 1.05rem; color: #334155; line-height: 1.8; white-space: pre-wrap; }
+
+        /* RESPONSIF MOBILE */
+        @media (max-width: 768px) {
+            .header-container { flex-direction: column; padding: 12px 15px; gap: 12px; }
+            .nav-brand { justify-content: center; width: 100%; }
+            .nav-wrapper { width: 100%; max-width: 100%; }
+            nav ul { padding: 0 20px; }
+            .hero h1 { font-size: 2.2rem; }
+            .section-card { padding: 2rem 1.5rem; border-radius: 28px; }
+            .layanan-grid { grid-template-columns: 1fr; }
+            .modal-img { height: 200px; }
+            .modal-body { padding: 20px; }
         }
     </style>
 </head>
 <body>
 
+    <header class="header-container glass">
+        <div class="nav-brand">
+            <img src="logo_sekolah (1).png" alt="Logo SMPN 1 Damai" onerror="this.src='https://via.placeholder.com/40'">
+            <div class="title">SMPN 1 Damai</div>
+        </div>
+        
+        <div class="nav-wrapper">
+            <button class="nav-arrow left" onclick="scrollNav(-100)"><i class="fa-solid fa-chevron-left"></i></button>
+            <nav>
+                <ul id="nav-list">
+                    <li><a href="#beranda">Beranda</a></li>
+                    <li><a href="#profil">Profil</a></li>
+                    <li><a href="#visimisi">Visi & Misi</a></li>
+                    <li><a href="#struktur">Struktur</a></li>
+                    <li><a href="#layanan">Layanan Web</a></li>
+                    <li><a href="#kontak">Kontak</a></li>
+                </ul>
+            </nav>
+            <button class="nav-arrow right" onclick="scrollNav(100)"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+    </header>
+
+    <div class="hero">
+        <h1>Selamat Datang di<br>SMP Negeri 1 Damai</h1>
+        <p>Membentuk generasi unggul, beradab, dan melek teknologi untuk masa depan gemilang.</p>
+    </div>
+
     <div class="container">
-        <img src="logo_sekolah (1).png" alt="Logo SMPN 1 Damai" class="logo">
         
-        <h1>Website Sedang Dalam Pengembangan</h1>
-        <p>Mohon maaf, situs utama <strong>smpn1damai.web.id</strong> saat ini sedang dalam proses pengerjaan dan pemeliharaan sistem.</p>
-        
-        <div class="loader"></div>
-        
-        <div class="links">
-            <p>Silakan akses layanan yang sudah tersedia:</p>
-            <a href="https://exambro.smpn1damai.web.id" class="btn-link">Exambro</a>
-            <a href="https://perpus.smpn1damai.web.id" class="btn-link">Perpustakaan</a>
+        <section id="beranda" class="section-card glass">
+            <h2 class="section-title">Berita & Informasi Terbaru</h2>
+            <div id="news-container" class="news-grid">
+                <div style="text-align: center; width: 100%; color: #0ea5e9; font-weight: bold;">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i> Menarik data dari server...
+                </div>
+            </div>
+        </section>
+
+        <section id="profil" class="section-card glass">
+            <h2 class="section-title">Profil Sekolah</h2>
+            <p>Sejarah dan profil lengkap SMP Negeri 1 Damai sedang dalam proses pembaruan. Kami akan segera menampilkan informasi detail mengenai perjalanan dan pencapaian sekolah kami.</p>
+        </section>
+
+        <section id="visimisi" class="section-card glass">
+            <h2 class="section-title">Visi & Misi</h2>
+            <p><strong>Visi:</strong> Mewujudkan peserta didik yang beriman, cerdas, terampil, dan berwawasan lingkungan.</p>
+            <p style="margin-top: 10px;"><strong>Misi:</strong> <i>(Detail misi akan segera diperbarui)</i></p>
+        </section>
+
+        <section id="struktur" class="section-card glass">
+            <h2 class="section-title">Struktur Organisasi</h2>
+            <p>Bagan struktur organisasi Kepala Sekolah, Dewan Guru, dan Staf Tata Usaha SMPN 1 Damai akan ditampilkan pada sesi ini.</p>
+        </section>
+
+        <section id="layanan" class="section-card glass">
+            <h2 class="section-title">Layanan Ekosistem Digital</h2>
+            <p style="margin-bottom: 20px;">Akses cepat menuju portal layanan terpadu milik SMPN 1 Damai:</p>
+            
+            <div class="layanan-grid">
+                <a href="https://perpus.smpn1damai.web.id" class="layanan-card">
+                    <i class="fa-solid fa-book-open-reader"></i>
+                    <h3>Perpus Semangat Pagi</h3>
+                    <p>Perpustakaan digital dan e-katalog pintar.</p>
+                </a>
+                
+                <a href="https://exambro.smpn1damai.web.id" class="layanan-card">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <h3>Exambro CBT</h3>
+                    <p>Aplikasi ujian resmi anti kecurangan (Android).</p>
+                </a>
+            </div>
+        </section>
+
+        <section id="kontak" class="section-card glass" style="margin-bottom: 1rem;">
+            <h2 class="section-title">Hubungi Kami</h2>
+            <div class="kontak-wrapper">
+                <div class="kontak-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <p>Alamat</p>
+                    <a href="#">Jl. Pendidikan No. 1, Damai</a>
+                </div>
+                <div class="kontak-item">
+                    <i class="fa-solid fa-envelope"></i>
+                    <p>Email</p>
+                    <a href="mailto:admin@smpn1damai.web.id">admin@smpn1damai.web.id</a>
+                </div>
+                <div class="kontak-item">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <p>WhatsApp</p>
+                    <a href="https://wa.me/6281234567890" target="_blank">+62 812-3456-7890</a>
+                </div>
+                <div class="kontak-item">
+                    <i class="fa-brands fa-instagram"></i>
+                    <p>Instagram</p>
+                    <a href="https://instagram.com/smpn1damai" target="_blank">@smpn1damai</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        &copy; 2026 | Tim IT Terpadu SMPN 1 Damai
+    </footer>
+
+    <div id="modal-berita" onclick="tutupModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="close-btn" onclick="tutupModal(true)">&times;</div>
+            <img id="modal-img" src="" alt="Thumbnail" class="modal-img">
+            <div class="modal-body">
+                <h2 id="modal-title">Judul Berita</h2>
+                <div class="meta" id="modal-meta">Tanggal | Penulis</div>
+                <div class="text-content" id="modal-text">Isi berita...</div>
+            </div>
         </div>
     </div>
 
+    <script>
+        // ==========================================
+        // LOGIKA PANAH NAVIGASI SCROLL (RESPONSIF)
+        // ==========================================
+        const navList = document.getElementById('nav-list');
+        const arrowLeft = document.querySelector('.nav-arrow.left');
+        const arrowRight = document.querySelector('.nav-arrow.right');
+
+        function cekPanah() {
+            // Munculkan panah kiri jika sudah scroll ke kanan
+            arrowLeft.style.display = navList.scrollLeft > 5 ? 'flex' : 'none';
+            
+            // Munculkan panah kanan jika masih ada sisa ruang untuk scroll
+            const sisaScroll = navList.scrollWidth - navList.clientWidth - navList.scrollLeft;
+            arrowRight.style.display = sisaScroll > 5 ? 'flex' : 'none';
+        }
+
+        function scrollNav(jarak) {
+            navList.scrollBy({ left: jarak, behavior: 'smooth' });
+        }
+
+        // Pasang pendeteksi scroll dan perubahan ukuran layar
+        navList.addEventListener('scroll', cekPanah);
+        window.addEventListener('resize', cekPanah);
+        
+        // Panggil sekali saat web pertama kali dimuat
+        setTimeout(cekPanah, 500); 
+
+        // ==========================================
+        // LOGIKA TARIK BERITA DARI CMS (GITHUB API)
+        // ==========================================
+        
+        // REPO GITHUB ENTE (Sesuai dengan yang di CMS)
+        const REPO = 'perpussemangatpagi/smpn1damai';
+        const RAW_URL = `https://raw.githubusercontent.com/${REPO}/main`;
+
+        // Array rahasia untuk menyimpan data berita utuh
+        let databaseBerita = [];
+
+        async function muatBerita() {
+            const wadah = document.getElementById('news-container');
+            try {
+                // 1. Minta daftar file berita dari API Vercel yang udah kita buat
+                const res = await fetch('/api/list');
+                const files = await res.json();
+                
+                if (files.error) throw new Error();
+
+                // Ambil 6 berita terbaru saja (yang berakhiran .md)
+                const fileBerita = files.filter(f => f.name.endsWith('.md')).reverse().slice(0, 6);
+                
+                if (fileBerita.length === 0) {
+                    return wadah.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">Belum ada berita yang diterbitkan.</p>';
+                }
+                
+                let htmlKartu = '';
+                databaseBerita = []; // Reset memori
+
+                // 2. Bongkar isi tiap file berita satu per satu
+                for (let i = 0; i < fileBerita.length; i++) {
+                    const file = fileBerita[i];
+                    const dRes = await fetch(`/api/detail?path=${file.path}`);
+                    const dData = await dRes.json();
+                    
+                    // Terjemahkan dari bahasa mesin (Base64) ke teks biasa
+                    const teksMentah = decodeURIComponent(escape(window.atob(dData.content)));
+                    
+                    // Ekstrak informasi dari kepala file (Frontmatter)
+                    const title = teksMentah.match(/title:\s*"(.*?)"/)?.[1] || 'Tanpa Judul';
+                    const dateRaw = teksMentah.match(/date:\s*"(.*?)"/)?.[1] || '';
+                    const author = teksMentah.match(/author:\s*"(.*?)"/)?.[1] || 'Humas';
+                    let thumb = teksMentah.match(/thumbnail:\s*"(.*?)"/)?.[1] || '';
+                    
+                    // TRIK BYPASS RAW: Biar gambar langsung muncul walau vercel belum redeploy!
+                    if (thumb && thumb.startsWith('/')) {
+                        thumb = RAW_URL + thumb;
+                    } else if (!thumb) {
+                        thumb = 'https://via.placeholder.com/400x200?text=Tidak+Ada+Foto'; // Gambar cadangan
+                    }
+
+                    // Percantik Format Tanggal
+                    const tglObj = new Date(dateRaw);
+                    const tanggalCantik = isNaN(tglObj) ? '-' : tglObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+                    // Ambil isi teksnya dan bersihkan sedikit format markdown kasarnya
+                    let body = teksMentah.replace(/---[\s\S]*?---/, '').trim();
+                    let snippet = body.replace(/[#*`_>]/g, '').substring(0, 110) + '...';
+                    
+                    // Simpan data utuh ke memori untuk ditampilkan di Modal nanti
+                    databaseBerita.push({ title, thumb, tanggalCantik, author, body });
+
+                    // Rakit HTML Kartunya
+                    htmlKartu += `
+                        <div class="news-card">
+                            <img src="${thumb}" alt="${title}" class="news-img" loading="lazy">
+                            <div class="news-content">
+                                <div class="news-date">${tanggalCantik}</div>
+                                <h3 class="news-title">${title}</h3>
+                                <p class="news-snippet">${snippet}</p>
+                                <a href="javascript:void(0)" class="btn-baca" onclick="bukaModal(${i})">Baca Selengkapnya</a>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                wadah.innerHTML = htmlKartu;
+
+            } catch(e) {
+                wadah.innerHTML = '<p style="text-align:center; color: red; grid-column: 1/-1;">Gagal menyambung ke server pangkalan data.</p>';
+            }
+        }
+
+        // ==========================================
+        // LOGIKA MODAL (POPUP BACA BERITA)
+        // ==========================================
+        function bukaModal(index) {
+            const data = databaseBerita[index];
+            document.getElementById('modal-img').src = data.thumb;
+            document.getElementById('modal-title').innerText = data.title;
+            document.getElementById('modal-meta').innerText = `${data.tanggalCantik} | Oleh: ${data.author}`;
+            
+            // Format sederhana: mengubah enter menjadi <br>
+            document.getElementById('modal-text').innerHTML = data.body.replace(/\n/g, '<br>');
+            
+            document.getElementById('modal-berita').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Kunci scroll layar utama
+        }
+
+        function tutupModal(isCloseBtn) {
+            if(isCloseBtn === true || isCloseBtn.target.id === 'modal-berita') {
+                document.getElementById('modal-berita').style.display = 'none';
+                document.body.style.overflow = 'auto'; // Buka kunci scroll
+            }
+        }
+
+        // Jalankan fungsi tarik berita saat web dibuka
+        muatBerita();
+
+    </script>
 </body>
 </html>
