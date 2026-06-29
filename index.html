@@ -21,6 +21,20 @@
             color: #1e293b; line-height: 1.6;
         }
 
+        /* LAYAR LOADING PENUTUP (TIRAI) */
+        #page-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #f4f4f9; z-index: 9999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; transition: opacity 0.5s ease-out;
+        }
+        .spinner {
+            width: 50px; height: 50px; border: 5px solid #cbd5e1; border-top-color: #0ea5e9;
+            border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        #page-loader h3 { color: #0f172a; font-weight: 800; font-size: 1.2rem;}
+        #page-loader p { color: #64748b; font-weight: 600; font-size: 0.9rem;}
+
         .glass {
             background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(14px) saturate(140%);
@@ -44,7 +58,8 @@
         nav { width: 100%; overflow: hidden; } 
         nav ul {
             display: flex; gap: 1.2rem; list-style: none; overflow-x: auto; 
-            padding: 5px 10px; margin: 0;
+            padding: 5px 35px; /* JARAK AMAN KANAN KIRI UNTUK PANAH */
+            margin: 0;
             -ms-overflow-style: none; scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
         }
@@ -55,6 +70,17 @@
             padding: 8px 12px; border-radius: 20px; transition: 0.3s;
         }
         nav ul li a:hover { background: rgba(255,255,255,0.6); color: #0ea5e9; }
+
+        /* KEMBALINYA SI PANAH LEGENDARIS */
+        .nav-arrow {
+            display: none; position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(255, 255, 255, 0.9);
+            width: 32px; height: 32px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.15); 
+            cursor: pointer; color: #0ea5e9; font-weight: bold; z-index: 10;
+            justify-content: center; align-items: center;
+        }
+        .nav-arrow.left { left: 0; }
+        .nav-arrow.right { right: 0; }
 
         .hero { text-align: center; padding: 2rem 20px; }
         .hero h1 { font-size: 3.5rem; font-weight: 900; letter-spacing: -2px; color: #0f172a; line-height: 1.1; margin-bottom: 1rem; }
@@ -101,33 +127,32 @@
         .modal-body .meta { color: #64748b; font-size: 0.9rem; font-weight: 600; margin-bottom: 25px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
         .modal-body .text-content { font-size: 1.05rem; color: #334155; line-height: 1.8; white-space: pre-wrap; }
 
-        /* ========================================== */
-        /* PERBAIKAN TOTAL UNTUK LAYAR HP (MOBILE)    */
-        /* ========================================== */
         @media (max-width: 768px) {
             .header-container { flex-direction: column; padding: 15px; gap: 15px; }
             .nav-brand { justify-content: center; width: 100%; }
             .nav-wrapper { width: 100%; max-width: 100%; justify-content: flex-start; }
-            nav { -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%); mask-image: linear-gradient(to right, black 85%, transparent 100%); }
-            nav ul { padding: 5px 30px 5px 10px; gap: 1rem; } 
             
             .hero h1 { font-size: 2.2rem; }
-            
-            /* Penyesuaian Ruang & Ukuran Font Biar Rapi */
             .container { padding: 0 15px 3rem; }
             .section-card { padding: 1.8rem 1.2rem; border-radius: 24px; margin-bottom: 2rem; }
-            .section-title { font-size: 1.6rem; margin-bottom: 1.2rem; } /* Ukuran dikecilkan */
+            .section-title { font-size: 1.6rem; margin-bottom: 1.2rem; } 
             
-            .news-grid { grid-template-columns: 1fr; gap: 15px; } /* Grid presisi 1 kolom */
+            .news-grid { grid-template-columns: 1fr; gap: 15px; } 
             .layanan-grid { grid-template-columns: 1fr; }
             
             .modal-img { height: 200px; }
             .modal-body { padding: 20px; }
-            .modal-body h2 { font-size: 1.5rem; } /* Judul modal lebih kecil di HP */
+            .modal-body h2 { font-size: 1.5rem; } 
         }
     </style>
 </head>
 <body>
+
+    <div id="page-loader">
+        <div class="spinner"></div>
+        <h3>SMPN 1 Damai</h3>
+        <p>Menyiapkan Ekosistem Digital...</p>
+    </div>
 
     <header class="header-container glass">
         <div class="nav-brand">
@@ -135,6 +160,7 @@
             <div class="title">SMPN 1 Damai</div>
         </div>
         <div class="nav-wrapper">
+            <button class="nav-arrow left" onclick="scrollNav(-100)"><i class="fa-solid fa-chevron-left"></i></button>
             <nav>
                 <ul id="nav-list">
                     <li><a href="#beranda">Beranda</a></li>
@@ -145,6 +171,7 @@
                     <li><a href="#kontak">Kontak</a></li>
                 </ul>
             </nav>
+            <button class="nav-arrow right" onclick="scrollNav(100)"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
     </header>
 
@@ -157,11 +184,7 @@
         
         <section id="beranda" class="section-card glass">
             <h2 class="section-title">Berita & Informasi Terbaru</h2>
-            <div id="news-container" class="news-grid">
-                <div style="text-align: center; width: 100%; color: #0ea5e9; font-weight: bold;">
-                    <i class="fa-solid fa-circle-notch fa-spin"></i> Menarik data dari server...
-                </div>
-            </div>
+            <div id="news-container" class="news-grid"></div>
         </section>
 
         <section id="profil" class="section-card glass">
@@ -243,41 +266,65 @@
     </div>
 
     <script>
+        // LOGIKA PANAH NAVBAR
+        const navList = document.getElementById('nav-list');
+        const arrowLeft = document.querySelector('.nav-arrow.left');
+        const arrowRight = document.querySelector('.nav-arrow.right');
+
+        function cekPanah() {
+            arrowLeft.style.display = navList.scrollLeft > 5 ? 'flex' : 'none';
+            const sisaScroll = navList.scrollWidth - navList.clientWidth - navList.scrollLeft;
+            arrowRight.style.display = sisaScroll > 5 ? 'flex' : 'none';
+        }
+
+        function scrollNav(jarak) { navList.scrollBy({ left: jarak, behavior: 'smooth' }); }
+        navList.addEventListener('scroll', cekPanah);
+        window.addEventListener('resize', cekPanah);
+        setTimeout(cekPanah, 500); 
+
+        // LOGIKA TARIK BERITA CMS KILAT (PARALLEL FETCHING)
         const REPO = 'perpussemangatpagi/smpn1damai';
         const RAW_URL = `https://raw.githubusercontent.com/${REPO}/main`;
         let databaseBerita = [];
 
         async function muatBerita() {
             const wadah = document.getElementById('news-container');
+            const loader = document.getElementById('page-loader');
+            
             try {
+                // Tarik daftar file
                 const res = await fetch('/api/list');
                 const files = await res.json();
                 if (files.error) throw new Error();
 
                 const fileBerita = files.filter(f => f.name.endsWith('.md')).reverse().slice(0, 6);
-                if (fileBerita.length === 0) return wadah.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">Belum ada berita.</p>';
+                
+                if (fileBerita.length === 0) {
+                    wadah.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">Belum ada berita.</p>';
+                    return tutupTirai(loader);
+                }
+                
+                // JURUS KAGEBUNSHIN: Tarik semua isi berita secara serentak (Parallel)
+                const tarikSemua = fileBerita.map(file => fetch(`/api/detail?path=${file.path}`).then(r => r.json()));
+                const hasilSemua = await Promise.all(tarikSemua);
                 
                 let htmlKartu = '';
                 databaseBerita = []; 
 
-                for (let i = 0; i < fileBerita.length; i++) {
-                    const file = fileBerita[i];
-                    const dRes = await fetch(`/api/detail?path=${file.path}`);
-                    const dData = await dRes.json();
+                for (let i = 0; i < hasilSemua.length; i++) {
+                    const dData = hasilSemua[i];
                     const teksMentah = decodeURIComponent(escape(window.atob(dData.content)));
                     
                     const title = teksMentah.match(/title:\s*"(.*?)"/)?.[1] || 'Tanpa Judul';
                     const dateRaw = teksMentah.match(/date:\s*"(.*?)"/)?.[1] || '';
                     const author = teksMentah.match(/author:\s*"(.*?)"/)?.[1] || 'Humas';
                     
-                    // JURUS CACHE BUSTER SAKTI: Bikin GitHub ngeluarin file paling fresh detik ini juga!
                     const timestamp = new Date().getTime();
                     
                     let thumb = teksMentah.match(/thumbnail:\s*"(.*?)"/)?.[1] || '';
                     let rawFallback = thumb;
                     
                     if (thumb && thumb.startsWith('/')) {
-                        // Tambahin Cache Buster ke URL Gambar Asli
                         rawFallback = `${RAW_URL}${thumb}?t=${timestamp}`; 
                     } else if (!thumb) {
                         thumb = 'https://via.placeholder.com/400x200?text=Tidak+Ada+Foto';
@@ -289,13 +336,11 @@
 
                     let body = teksMentah.replace(/---[\s\S]*?---/, '').trim();
                     
-                    // Sulap markdown gambar tambahan (galeri) supaya ikut dipasangi Cache Buster
-                    body = body.replace(/!\[(.*?)\]\((\/images\/.*?)\)/g, `![$1](${RAW_URL}$2?t=${timestamp})`); 
-
-                    // Bersihkan kode gambar dari text snippet yang tampil di depan
-                    let snippet = body.replace(/[#*`_>!\[\]()]/g, '').substring(0, 110) + '...';
-                    snippet = snippet.replace(/https:\/\/raw\.githubusercontent\.com[^\s]*/g, ''); // Hapus sisa URL nyasar
+                    // Bikin snippet dengan cara membuang SEMUA kode gambar markdown dari teks pratinjau
+                    let snippetBersih = body.replace(/!\[.*?\]\(.*?\)/g, ''); 
+                    snippetBersih = snippetBersih.replace(/[#*`_>!\[\]()]/g, '').substring(0, 110) + '...';
                     
+                    // Simpan body utuh (masih bawaan markdown) ke database memori
                     databaseBerita.push({ title, thumb, rawFallback, tanggalCantik, author, body });
 
                     htmlKartu += `
@@ -304,16 +349,26 @@
                             <div class="news-content">
                                 <div class="news-date">${tanggalCantik}</div>
                                 <h3 class="news-title">${title}</h3>
-                                <p class="news-snippet">${snippet}</p>
+                                <p class="news-snippet">${snippetBersih}</p>
                                 <a href="javascript:void(0)" class="btn-baca" onclick="bukaModal(${i})">Baca Selengkapnya</a>
                             </div>
                         </div>
                     `;
                 }
                 wadah.innerHTML = htmlKartu;
+
             } catch(e) {
                 wadah.innerHTML = '<p style="text-align:center; color: red; grid-column: 1/-1;">Gagal menyambung ke database.</p>';
+            } finally {
+                // Buka tirai penutup kalau sukses atau error
+                tutupTirai(loader);
             }
+        }
+
+        // Fungsi Animasi Buka Tirai
+        function tutupTirai(loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => { loader.style.display = 'none'; }, 500);
         }
 
         function bukaModal(index) {
@@ -327,9 +382,14 @@
             document.getElementById('modal-meta').innerText = `${data.tanggalCantik} | Oleh: ${data.author}`;
             
             let htmlBody = data.body.replace(/\n/g, '<br>');
+            const timestamp = new Date().getTime();
             
-            // Render gambar tambahan dengan styling CSS yang cakep (biar nggak bleber ke samping)
-            htmlBody = htmlBody.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="width: 100%; border-radius: 12px; margin: 15px 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: block;">');
+            // JURUS FALLBACK GALERI: Sulap gambar tambahan biar kuat tahan banting
+            htmlBody = htmlBody.replace(/!\[(.*?)\]\((\/images\/.*?)\)/g, function(match, alt, path) {
+                const urlRawGaleri = `${RAW_URL}${path}?t=${timestamp}`;
+                // Pakai src dari Vercel dulu, kalau gagal 1 detik, auto loncat ke urlRawGaleri
+                return `<img src="${path}" onerror="this.onerror=null; this.src='${urlRawGaleri}';" alt="${alt}" style="width: 100%; border-radius: 12px; margin: 15px 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: block;">`;
+            });
             
             document.getElementById('modal-text').innerHTML = htmlBody;
             
