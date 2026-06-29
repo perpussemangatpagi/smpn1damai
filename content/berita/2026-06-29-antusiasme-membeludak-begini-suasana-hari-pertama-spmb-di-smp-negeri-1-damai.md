@@ -1,6 +1,6 @@
 ---
 title: "Antusiasme Membeludak! Begini Suasana Hari Pertama SPMB di SMP Negeri 1 Damai"
-date: "2026-06-29T05:36:35.562Z"
+date: "2026-06-29T06:41:05.459Z"
 thumbnail: "/images/1782711395562-0-antusiasme-membeludak-begini-suasana-hari-pertama-spmb-di-smp-negeri-1-damai.jpg"
 author: "Admin Web SMPN 1 Damai"
 ---
@@ -16,7 +16,7 @@ Ketua Panitia SPMB SMP Negeri 1 Damai, menyatakan bahwa sistem tahun ini dikolab
 "Kami sudah memprediksi lonjakan di hari pertama ini. Alhamdulillah, berkat sistem antrean yang sudah kami siapkan dan tambahan personel dari kalangan guru serta staf tata usaha, proses verifikasi berkas berjalan sangat lancar tanpa ada desak-desakan," jelasnya.
 Harapan Orang Tua Calon Siswa
 Raut tegang sekaligus penuh harap terlihat dari wajah para orang tua yang mendampingi anak-anak mereka. SMP Negeri 1 Damai selama ini memang dikenal dengan berbagai prestasi akademik maupun non-akademik, menjadikannya tujuan utama bagi lulusan sekolah dasar di wilayah sekitarnya.
-Salah satu orang tua calon siswa, Ibu Rina (42), mengaku sengaja datang lebih awal agar proses verifikasi bisa segera selesai.
+Salah satu orang tua calon siswa, Ibu Kartina (42), mengaku sengaja datang lebih awal agar proses verifikasi bisa segera selesai.
 "Sempat deg-degan takut sistemnya down atau berkas ada yang kurang. Tapi ternyata pelayanannya cepat dan panitianya sangat membantu mengarahkan kami yang sempat kebingungan. Harapannya tentu saja anak saya bisa lolos dan diterima di sini," ungkapnya lega setelah keluar dari ruang verifikasi.
 Rangkaian SPMB Masih Berlanjut
 Pihak sekolah mengimbau kepada para pendaftar yang belum sempat datang pada hari pertama untuk tidak panik. Masa pendaftaran dan verifikasi berkas SPMB di SMP Negeri 1 Damai masih akan berlangsung selama beberapa hari ke depan.
