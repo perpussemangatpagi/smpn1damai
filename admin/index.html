@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CMS SMPN 1 Damai</title>
+    <title>Admin SMPN 1 Damai</title>
     <style>
         * { box-sizing: border-box; }
         :root { --primary: #0ea5e9; --primary-hover: #0284c7; --danger: #ef4444; --text-main: #e2e8f0; --text-bold: #f8fafc; }
         body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text-main); 
-               /* Background gelap ala screenshot lu */
                background: linear-gradient(135deg, #0f172a, #1e1b4b, #064e3b); background-attachment: fixed; 
                min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 30px 15px; }
         .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.5); border-radius: 24px; }
@@ -29,8 +28,13 @@
         input[readonly] { background-color: rgba(255,255,255,0.05); color: #94a3b8; cursor: not-allowed; border-style: dashed; }
         #old-image-container { display: none; background: rgba(0,0,0,0.3); padding: 12px 15px; border-radius: 12px; margin-bottom: 15px; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.2);}
         #old-image-name { font-size: 0.85rem; font-weight: 600; color: #cbd5e1; word-break: break-all; }
-        button.btn-main { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 15px;}
+        
+        .btn-container { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        button.btn-main { flex: 1; min-width: 200px; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s; }
         button.btn-main:hover { background: var(--primary-hover); }
+        button.btn-cancel { flex: 1; min-width: 150px; padding: 14px; background: transparent; border: 2px solid var(--danger); color: var(--danger); border-radius: 50px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: 0.3s; display: none; }
+        button.btn-cancel:hover { background: var(--danger); color: white; }
+        
         button.btn-logout { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 8px 18px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         button.btn-logout:hover { background: var(--danger); color: white; }
         button.btn-hapus-foto { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; cursor: pointer;}
@@ -39,7 +43,7 @@
         .action-btns button { padding: 8px 15px; border: none; border-radius: 20px; font-size: 0.85rem; cursor: pointer; margin-left: 8px; font-weight: bold;}
         .btn-edit { background: #3b82f6; color: white; }
         .btn-delete { background: var(--danger); color: white; }
-        .loading { display: none; color: #38bdf8; font-weight: bold; text-align: center; margin-top: 15px; }
+        .loading { display: none; color: #38bdf8; font-weight: bold; text-align: center; margin-top: 15px; width: 100%; }
         
         @media (max-width: 600px) {
             .news-item { flex-direction: column; align-items: flex-start; gap: 10px;}
@@ -53,7 +57,7 @@
         <h2 style="margin-top:0; color: var(--text-bold); font-weight: 800;">Login CMS</h2>
         <input type="text" id="username" placeholder="Username" required>
         <input type="password" id="password" placeholder="Password" required>
-        <button onclick="doLogin()" id="btnLogin" class="btn-main">Login</button>
+        <button onclick="doLogin()" id="btnLogin" class="btn-main" style="width: 100%;">Login</button>
         <div id="login-msg" class="loading"></div>
     </div>
 
@@ -70,7 +74,6 @@
             <button class="tab-btn" id="tab-daftar" onclick="switchTab('daftar')">📋 Daftar Publikasi</button>
         </div>
 
-        <!-- AREA 1: TULIS BERITA -->
         <div id="area-tulis">
             <input type="hidden" id="edit-sha" value="">
             <input type="hidden" id="edit-path" value="">
@@ -96,11 +99,13 @@
             <label>Isi Berita</label>
             <textarea id="body" placeholder="Tulis beritamu di sini..."></textarea>
 
-            <button onclick="publish()" id="btnPublish" class="btn-main">🚀 Terbitkan Berita</button>
-            <div id="publish-msg" class="loading"></div>
+            <div class="btn-container">
+                <button onclick="batalEdit()" id="btnCancelEdit" class="btn-cancel">❌ Batal Edit</button>
+                <button onclick="publish()" id="btnPublish" class="btn-main">🚀 Terbitkan Berita</button>
+                <div id="publish-msg" class="loading"></div>
+            </div>
         </div>
 
-        <!-- AREA 2: DAFTAR PUBLIKASI -->
         <div id="area-daftar" style="display: none;">
             <div id="list-container" style="font-weight: 600; text-align: center;">Memuat data...</div>
         </div>
@@ -127,7 +132,6 @@
             document.getElementById('area-' + tab).style.display = 'block';
 
             if(tab === 'daftar') loadList();
-            if(tab === 'tulis' && !document.getElementById('edit-sha').value) resetForm();
         }
 
         async function doLogin() {
@@ -153,10 +157,23 @@
             document.getElementById('image').value = ''; document.getElementById('edit-sha').value = ''; 
             document.getElementById('edit-path').value = ''; document.getElementById('old-image-path').value = '';
             document.getElementById('delete-image-path').value = ''; document.getElementById('old-image-path').dataset.original = '';
-            document.getElementById('old-image-container').style.display = 'none'; document.getElementById('btnPublish').innerText = '🚀 Terbitkan Berita Baru'; 
+            document.getElementById('old-image-container').style.display = 'none'; 
             
-            // Set tanggal hari ini
-            document.getElementById('date').value = new Date().toLocaleDateString('en-CA');
+            document.getElementById('btnPublish').innerText = '🚀 Terbitkan Berita Baru'; 
+            document.getElementById('btnCancelEdit').style.display = 'none';
+            
+            // Format wajib YYYY-MM-DD biar nggak error di kolom input kalender browser
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            document.getElementById('date').value = `${yyyy}-${mm}-${dd}`;
+        }
+
+        function batalEdit() {
+            if(confirm("Yakin ingin membatalkan proses edit dan menulis berita baru?")) {
+                resetForm();
+            }
         }
 
         function hapusFotoLama() {
@@ -203,16 +220,27 @@
                 const thumbMatch = rawContent.match(/thumbnail:\s*"(.*?)"/);
                 const oldImage = (thumbMatch && thumbMatch[1] !== '') ? thumbMatch[1] : '';
                 
-                // Ambil tanggal
+                // Cek apakah berita jadul punya tanggal atau enggak. Kalau enggak, kasih tanggal hari ini.
                 const dateMatch = rawContent.match(/date:\s*"(.*?)"/);
-                const dateVal = dateMatch ? dateMatch[1] : new Date().toLocaleDateString('en-CA');
+                let dateVal = '';
+                if (dateMatch && dateMatch[1]) {
+                    dateVal = dateMatch[1];
+                } else {
+                    const today = new Date();
+                    const yyyy = today.getFullYear();
+                    const mm = String(today.getMonth() + 1).padStart(2, '0');
+                    const dd = String(today.getDate()).padStart(2, '0');
+                    dateVal = `${yyyy}-${mm}-${dd}`;
+                }
 
                 document.getElementById('title').value = title; 
                 document.getElementById('body').value = body;
                 document.getElementById('date').value = dateVal;
                 document.getElementById('edit-sha').value = sha; 
                 document.getElementById('edit-path').value = path;
+                
                 document.getElementById('btnPublish').innerText = '💾 Simpan Perubahan';
+                document.getElementById('btnCancelEdit').style.display = 'block'; // Tombol batal muncul
                 
                 const oldPathInput = document.getElementById('old-image-path'); const delPathInput = document.getElementById('delete-image-path');
                 const oldImgContainer = document.getElementById('old-image-container'); const oldImgName = document.getElementById('old-image-name');
