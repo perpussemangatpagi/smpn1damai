@@ -3,49 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin SMPN 1 Damai</title>
+    <title>CMS SMPN 1 Damai</title>
     <style>
         * { box-sizing: border-box; }
-        :root { --primary: #0ea5e9; --primary-hover: #0284c7; --danger: #ef4444; --text-main: #e2e8f0; --text-bold: #f8fafc; }
-        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text-main); 
-               background: linear-gradient(135deg, #0f172a, #1e1b4b, #064e3b); background-attachment: fixed; 
-               min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 30px 15px; }
-        .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.5); border-radius: 24px; }
-        #login-screen { text-align: center; padding: 40px; width: 100%; max-width: 350px; margin-top: 10vh; }
-        #login-screen img { width: 100px; margin-bottom: 20px; }
+        :root { --primary: #0ea5e9; --primary-hover: #0284c7; --danger: #ef4444; --text-main: #1e293b; --text-bold: #0f172a; }
+        body { 
+            margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            color: var(--text-main); 
+            background-color: #f4f4f9; 
+            background-image: 
+                radial-gradient(at 20% 20%, rgba(56, 189, 248, 0.6) 0px, transparent 50%), 
+                radial-gradient(at 80% 10%, rgba(167, 139, 250, 0.6) 0px, transparent 50%), 
+                radial-gradient(at 10% 80%, rgba(251, 146, 60, 0.5) 0px, transparent 50%), 
+                radial-gradient(at 90% 90%, rgba(52, 211, 153, 0.5) 0px, transparent 50%); 
+            background-attachment: fixed; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 30px 15px; 
+        }
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%); 
+            border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.7); 
+            border-radius: 36px; 
+        }
+        #login-screen { text-align: center; padding: 40px; width: 100%; max-width: 350px; margin-top: 5vh; }
+        #login-screen img { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; margin-bottom: 20px; border: 2px solid white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         #dashboard-screen { display: none; width: 100%; max-width: 800px; padding: 35px; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(255,255,255,0.6); padding-bottom: 20px; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
         .header-left { display: flex; align-items: center; gap: 15px; }
-        .header img { height: 50px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2);}
-        .header h2 { margin: 0; font-size: 1.6rem; color: var(--text-bold); font-weight: 800; }
+        .header img { height: 50px; width: 50px; border-radius: 50%; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); object-fit: cover;}
+        .header h2 { margin: 0; font-size: 1.6rem; color: var(--text-bold); font-weight: 800; letter-spacing: -1px;}
         .nav-tabs { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 5px;}
-        .tab-btn { padding: 10px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); font-weight: 700; cursor: pointer; background: rgba(255,255,255,0.05); color: var(--text-main); transition: all 0.3s; white-space: nowrap;}
-        .tab-btn.active { background: rgba(255,255,255,0.15); color: #38bdf8; border-color: #38bdf8;}
-        label { display: block; font-weight: 700; margin-bottom: 6px; color: #38bdf8; font-size: 0.95rem; margin-top: 15px;}
-        input[type="text"], input[type="password"], input[type="date"], textarea, input[type="file"] { width: 100%; padding: 14px; margin-bottom: 5px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; border-radius: 12px; font-family: inherit; outline: none; transition: 0.3s; }
-        input:focus, textarea:focus { border-color: var(--primary); background: rgba(0,0,0,0.5); box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);}
+        .tab-btn { padding: 10px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.5); font-weight: 700; cursor: pointer; background: rgba(255,255,255,0.3); color: var(--text-main); transition: all 0.3s; white-space: nowrap;}
+        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-color: white;}
+        label { display: block; font-weight: 700; margin-bottom: 6px; color: var(--text-bold); font-size: 0.95rem; margin-top: 15px;}
+        input[type="text"], input[type="password"], input[type="date"], textarea, input[type="file"] { width: 100%; padding: 14px; margin-bottom: 5px; border: 1px solid rgba(255,255,255,0.8); background: rgba(255,255,255,0.6); color: var(--text-bold); border-radius: 16px; font-family: inherit; outline: none; transition: 0.3s; }
+        input:focus, textarea:focus { border-color: var(--primary); background: rgba(255,255,255,0.9); box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);}
         textarea { height: 250px; resize: vertical; }
-        input[readonly] { background-color: rgba(255,255,255,0.05); color: #94a3b8; cursor: not-allowed; border-style: dashed; }
-        #old-image-container { display: none; background: rgba(0,0,0,0.3); padding: 12px 15px; border-radius: 12px; margin-bottom: 15px; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.2);}
-        #old-image-name { font-size: 0.85rem; font-weight: 600; color: #cbd5e1; word-break: break-all; }
+        input[readonly] { background-color: rgba(0,0,0,0.05); color: var(--text-main); cursor: not-allowed; border-style: dashed; }
+        #old-image-container { display: none; background: rgba(255,255,255,0.5); padding: 12px 15px; border-radius: 16px; margin-bottom: 18px; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.8);}
+        #old-image-name { font-size: 0.85rem; font-weight: 600; word-break: break-all; }
         
         .btn-container { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
-        button.btn-main { flex: 1; min-width: 200px; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s; }
-        button.btn-main:hover { background: var(--primary-hover); }
+        button.btn-main { flex: 1; min-width: 200px; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s; box-shadow: 0 8px 20px rgba(14, 165, 233, 0.3); }
+        button.btn-main:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(14, 165, 233, 0.4); }
         button.btn-cancel { flex: 1; min-width: 150px; padding: 14px; background: transparent; border: 2px solid var(--danger); color: var(--danger); border-radius: 50px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: 0.3s; display: none; }
         button.btn-cancel:hover { background: var(--danger); color: white; }
         
-        button.btn-logout { background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 8px 18px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button.btn-logout { background: transparent; border: 2px solid var(--danger); color: var(--danger); padding: 8px 18px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         button.btn-logout:hover { background: var(--danger); color: white; }
         button.btn-hapus-foto { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; cursor: pointer;}
-        .news-item { background: rgba(0,0,0,0.2); padding: 15px 20px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05);}
+        .news-item { background: rgba(255,255,255,0.7); padding: 15px 20px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border: 1px solid rgba(255,255,255,0.5);}
         .news-title { font-weight: 700; color: var(--text-bold); font-size: 1.05rem;}
         .action-btns button { padding: 8px 15px; border: none; border-radius: 20px; font-size: 0.85rem; cursor: pointer; margin-left: 8px; font-weight: bold;}
         .btn-edit { background: #3b82f6; color: white; }
         .btn-delete { background: var(--danger); color: white; }
-        .loading { display: none; color: #38bdf8; font-weight: bold; text-align: center; margin-top: 15px; width: 100%; }
+        .loading { display: none; color: var(--primary); font-weight: bold; text-align: center; margin-top: 15px; width: 100%; }
         
         @media (max-width: 600px) {
+            #dashboard-screen { padding: 20px; border-radius: 28px;}
             .news-item { flex-direction: column; align-items: flex-start; gap: 10px;}
             .action-btns { align-self: flex-end; }
         }
@@ -54,7 +67,7 @@
 <body>
 
     <div id="login-screen" class="glass-card">
-        <img src="logo_sekolah (1).png" alt="Logo SMPN 1 Damai" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%; margin-bottom: 20px; border: 2px solid rgba(255,255,255,0.2);">
+        <img src="../logo_sekolah (1).png" alt="Logo SMPN 1 Damai" onerror="this.onerror=null; this.src='https://via.placeholder.com/100';">
         <h2 style="margin-top:0; color: var(--text-bold); font-weight: 800;">Login CMS</h2>
         <input type="text" id="username" placeholder="Username" required>
         <input type="password" id="password" placeholder="Password" required>
@@ -65,6 +78,7 @@
     <div id="dashboard-screen" class="glass-card">
         <div class="header">
             <div class="header-left">
+                <img src="../logo_sekolah (1).png" alt="Logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/50';">
                 <h2>Portal Admin</h2>
             </div>
             <button class="btn-logout" onclick="logout()">Logout</button>
@@ -75,6 +89,7 @@
             <button class="tab-btn" id="tab-daftar" onclick="switchTab('daftar')">📋 Daftar Publikasi</button>
         </div>
 
+        <!-- AREA 1: TULIS BERITA -->
         <div id="area-tulis">
             <input type="hidden" id="edit-sha" value="">
             <input type="hidden" id="edit-path" value="">
@@ -107,6 +122,7 @@
             </div>
         </div>
 
+        <!-- AREA 2: DAFTAR PUBLIKASI -->
         <div id="area-daftar" style="display: none;">
             <div id="list-container" style="font-weight: 600; text-align: center;">Memuat data...</div>
         </div>
@@ -163,7 +179,6 @@
             document.getElementById('btnPublish').innerText = '🚀 Terbitkan Berita Baru'; 
             document.getElementById('btnCancelEdit').style.display = 'none';
             
-            // Format wajib YYYY-MM-DD biar nggak error di kolom input kalender browser
             const today = new Date();
             const yyyy = today.getFullYear();
             const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -221,7 +236,6 @@
                 const thumbMatch = rawContent.match(/thumbnail:\s*"(.*?)"/);
                 const oldImage = (thumbMatch && thumbMatch[1] !== '') ? thumbMatch[1] : '';
                 
-                // Cek apakah berita jadul punya tanggal atau enggak. Kalau enggak, kasih tanggal hari ini.
                 const dateMatch = rawContent.match(/date:\s*"(.*?)"/);
                 let dateVal = '';
                 if (dateMatch && dateMatch[1]) {
@@ -241,7 +255,7 @@
                 document.getElementById('edit-path').value = path;
                 
                 document.getElementById('btnPublish').innerText = '💾 Simpan Perubahan';
-                document.getElementById('btnCancelEdit').style.display = 'block'; // Tombol batal muncul
+                document.getElementById('btnCancelEdit').style.display = 'block'; 
                 
                 const oldPathInput = document.getElementById('old-image-path'); const delPathInput = document.getElementById('delete-image-path');
                 const oldImgContainer = document.getElementById('old-image-container'); const oldImgName = document.getElementById('old-image-name');
